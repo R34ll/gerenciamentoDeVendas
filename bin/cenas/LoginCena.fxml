@@ -14,7 +14,7 @@
       <TextField fx:id="username" layoutX="387.0" layoutY="208.0" prefHeight="25.0" prefWidth="239.0" />
       <Label fx:id="wrongLogin" layoutX="493.0" layoutY="410.0" />
       <PasswordField fx:id="password" layoutX="387.0" layoutY="268.0" prefHeight="25.0" prefWidth="239.0" />
-      <Button fx:id="button" layoutX="454.0" layoutY="319.0" mnemonicParsing="false" onAction="#userLogin" prefHeight="25.0" prefWidth="106.0" text="Entrar" />
+      <Button fx:id="button" layoutX="454.0" layoutY="319.0" mnemonicParsing="false" onAction="#usuarioLogin" prefHeight="25.0" prefWidth="106.0" text="Entrar" />
       <Label layoutX="244.0" layoutY="77.0" text="Sistema de Gerenciamento de Vendas">
          <font>
             <Font name="System Bold" size="32.0" />

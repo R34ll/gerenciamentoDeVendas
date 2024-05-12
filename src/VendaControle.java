@@ -224,6 +224,7 @@ public class VendaControle extends AnchorPane{
 
         String precoText = this.entradaVendaPreco.getText();
         String quantText = this.entradaVendaProdutoId.getText();
+
         if (!precoText.trim().isEmpty() && !quantText.trim().isEmpty()) {
             try {
                 Produto produtoAtualizado = new Produto(produtoSelectionado, this.entradaVendaId.getText(),

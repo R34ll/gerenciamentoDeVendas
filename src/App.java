@@ -18,7 +18,6 @@ public class App extends Application {
     
     private static Stage stg; // // Stage object to hold the main stage reference
 
-
     /* Main method to launch the application */
     public static void main(String[] args) throws Exception {
         launch(args);
@@ -66,4 +65,5 @@ public class App extends Application {
         alert.setContentText(mensagem);
         alert.showAndWait();
     }
+
 }
