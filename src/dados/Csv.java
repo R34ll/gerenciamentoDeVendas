@@ -3,47 +3,49 @@ package dados;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
 
 
 public class Csv {
-    public List<List<String>> loadCSV(String path){
+    public List<List<String>> carregaCSV(String path) throws IOException{
 
-        List<List<String>> records = new ArrayList<>();
-
-        try(Scanner scanner = new Scanner(new File(path),  StandardCharsets.UTF_8)){
-            while(scanner.hasNextLine()){
-                records.add(getRecordFromLine(scanner.nextLine()));
+        List<List<String>> recordes = new ArrayList<>();
+        
+        try(BufferedReader reader = new BufferedReader(new FileReader(path, StandardCharsets.UTF_8))){
+            // Ignora a primeira linha(header)
+            reader.readLine();
+            
+            String linha;
+            while((linha = reader.readLine()) != null){
+                recordes.add(getRecordFromLine(linha));
             }
-        }catch(IOException e){
-            System.err.println(e);
+        }catch( IOException e){
+            throw new IOException("Erro ao carregar o arquivo CSV: " + e.getMessage());
         }
 
-        records.remove(0);// remove table names(id, name etc)
-
-        return records;
+        return recordes;
     }
 
     private List<String> getRecordFromLine(String line){
-        List<String> values = new ArrayList<String>();
+        List<String> valores = new ArrayList<String>();
 
         try(Scanner scanner = new Scanner(line)){
             scanner.useDelimiter(",");
             while(scanner.hasNext()){
-                values.add(scanner.next());
+                valores.add(scanner.next());
             }
         }
 
-        return values;
+        return valores;
     }
 
 
@@ -51,37 +53,76 @@ public class Csv {
     
 
     public void adicionar(String conteudo, String path) throws IOException {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(path, true))) {
+        try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path, true), StandardCharsets.UTF_8))) {
+
             writer.newLine();
             writer.write(conteudo);
-            System.out.println("Conteudo salvo");
+            System.out.println("Conteúdo salvo com sucesso.");
         } catch (IOException e) {
-            System.err.println("Erro ocorreu: " + e.getMessage());
-            throw e; // Re-throw the exception to let the caller handle it
+            throw new IOException("Erro ao adicionar conteúdo ao arquivo CSV: " + e.getMessage());
         }
     }
 
 
     public  void removePorId(String csvFilePath, int id) throws IOException {
-        File file = new File(csvFilePath);
-        BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"));
-        StringBuilder content = new StringBuilder();
-        String line;
+        try {
+            File inputFile = new File(csvFilePath);
+            File tempFile = new File("temp.csv");
 
-        while ((line = reader.readLine()) != null) {
-            // Assuming each line in the file represents a record with an ID
-            // Check if the ID in the line matches the ID to be removed
-            // If it matches, skip this line
-            if (!line.startsWith(id + ",")) {
-                content.append(line).append("\n");
+            BufferedReader reader = new BufferedReader(new FileReader(inputFile, StandardCharsets.UTF_8));
+            BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile, StandardCharsets.UTF_8));
+
+            String linhaAtual;
+            List<String> linhas = new ArrayList<>();
+
+            while((linhaAtual = reader.readLine()) != null){
+                if(!linhaAtual.startsWith(id+",")){
+                    linhas.add(linhaAtual);
+                }
+            }
+
+
+            Iterator<String> iterator = linhas.iterator();
+            while(iterator.hasNext()){
+                String linha = iterator.next();
+                if(iterator.hasNext()){
+                    writer.write(linha + System.getProperty("line.separator"));
+                }else{
+                    writer.write(linha);
+                }
+            }
+            
+
+            writer.close();
+            reader.close();
+
+            if (!inputFile.delete()) {
+                throw new IOException("Erro ao excluir o arquivo original.");
+            }
+
+            if (!tempFile.renameTo(inputFile)) {
+                throw new IOException("Erro ao renomear o arquivo temporário.");
+            }
+
+            System.out.println("Registro removido com sucesso.");
+        } catch (IOException e) {
+            throw new IOException("Erro ao remover registro do arquivo CSV: " + e.getMessage());
+        }
+    }
+
+    public int getLastID(String path) throws IOException {
+        try (BufferedReader reader = new BufferedReader(new FileReader(path))) {
+            String linha;
+            String ultimaLinha = null;
+            while ((linha = reader.readLine()) != null) {
+                ultimaLinha = linha; 
+            }
+            if (ultimaLinha != null) {
+                String[] tokens = ultimaLinha.split(",");
+                return Integer.parseInt(tokens[0]); 
             }
         }
-        reader.close();
-
-        // Write the modified content back to the file
-        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "UTF-8"));
-        writer.write(content.toString());
-        writer.close();
+        return 0;
     }
     
 }

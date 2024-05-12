@@ -1,3 +1,6 @@
+import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import dados.Csv;
@@ -14,7 +17,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import modelos.Produto;
 import modelos.Venda;
 
 public class VendaControle extends AnchorPane{
@@ -38,10 +43,8 @@ public class VendaControle extends AnchorPane{
     @FXML
     private TableColumn<Venda, Integer> colProdutoId;
 
-    
     @FXML
     private TableView<Venda> tabelaVendas;
-
 
     @FXML
     private Button btnVendasAdicionar;
@@ -56,13 +59,19 @@ public class VendaControle extends AnchorPane{
     private TextField entradaVendaClienteId;
 
     @FXML
+    private DatePicker entradaVendaData;
+
+    @FXML
+    private TextField entradaVendaFuncionarioId;
+
+    @FXML
+    private TextField entradaVendaId;
+
+    @FXML
     private TextField entradaVendaPreco;
 
     @FXML
     private TextField entradaVendaProdutoId;
-
-    @FXML
-    private DatePicker entradaVendaVenda;
 
     @FXML
     private TextField vendaPesquisaEntrada;
@@ -84,11 +93,10 @@ public class VendaControle extends AnchorPane{
 
     public ObservableList<Venda> carregarVendas(){
         ObservableList<Venda> listVendas = FXCollections.observableArrayList();
-
         Csv csv = new Csv();
-        List<List<String>> records = csv.loadCSV("src\\dados\\vendas.csv");
 
         try{
+            List<List<String>> records = csv.carregaCSV("src\\dados\\vendas.csv");
             for(List<String> rs: records){
 
 
@@ -123,58 +131,135 @@ public class VendaControle extends AnchorPane{
         this.colClienteId.setCellValueFactory(new PropertyValueFactory<Venda, Integer>("clienteId"));
         this.colFuncionarioId.setCellValueFactory(new PropertyValueFactory<Venda, Integer>("funcionarioId"));
 
-
         this.tabelaVendas.setItems(lista);
     }
 
 
     @FXML
     void clickVendasAdicionar(ActionEvent event) {
-        Csv csv = new Csv();
+        int vendaSelectionado = Integer.parseInt(this.entradaVendaId.getText());
         App app = new App();
-    
+
+        // Remove o venda selecionado do arquivo CSV
+        Csv csv = new Csv();
+        try {
+            csv.removePorId("src\\dados\\vendas.csv", vendaSelectionado);
+        } catch (IOException e) {
+            app.mostrarErro("Erro ao editar venda.", "");
+            e.printStackTrace();
+            return;
+        }
+
+        // // Atualiza o arquivo CSV com os novos dados do venda
         String precoText = this.entradaVendaPreco.getText();
         String produtoIdText = this.entradaVendaProdutoId.getText();
-        String clienteIdText = this.entradaVendaClienteId.getText();
-    
-        // // Check if the text fields are empty or contain only whitespace
-        // if (precoText.trim().isEmpty() || produtoIdText.trim().isEmpty()  || clienteIdText.trim().isEmpty()) {
-        //     app.mostrarErro("Erro Produto", "Por favor, preencha os campos de preço e quantidade.");
-        //     return; // Exit the method early to prevent further execution
-        // }
-    
-        // try {
-        //     Venda produto = new Venda(
-        //         0, 
-        //             Double.parseDouble(this.preco.get(1)), 
-        //             rs.get(2), 
+        String clientIdText = this.entradaVendaClienteId.getText();
+        String funcionarioIdText = this.entradaVendaFuncionarioId.getText();
+        String dataText = this.entradaVendaData.getValue().toString();
 
-        //             Integer.parseInt( rs.get(3)), 
-        //             Integer.parseInt(rs.get(4)), 
-        //             Integer.parseInt(rs.get(5))
-        //     );
-    
-        //     csv.adicionar(produto.toString(), "src\\dados\\produtos.csv");
+        if (!precoText.trim().isEmpty() && 
+            !produtoIdText.trim().isEmpty() && 
+            !clientIdText.trim().isEmpty() && 
+            !funcionarioIdText.trim().isEmpty() && 
+            !dataText.trim().isEmpty()
+            ) {
             
-        // } catch (IOException e) {
-        //     app.mostrarErro("Erro Produto", "Um erro ocorreu ao adicionar novo Produto!");
-        //     e.printStackTrace();
-        // } catch (NumberFormatException e) {
-        //     app.mostrarErro("Erro Produto", "Por favor, insira valores numéricos válidos para preço e quantidade.");
-        //     e.printStackTrace();
-        // }
+                try {
+                int ultimoID = csv.getLastID("src\\dados\\vendas.csv");
 
+                Venda vendaAtualizado = new Venda(
+                        ultimoID+1, 
+                        Double.parseDouble(precoText),
+                        dataText,
+                        Integer.parseInt(produtoIdText),
+                        Integer.parseInt(clientIdText),
+                        0//Integer.parseInt(funcionarioIdText)
+                    );
+                csv.adicionar(vendaAtualizado.toString(), "src\\dados\\vendas.csv");
+                this.mostrarVendasTabela();
+            } catch (IOException e) {
+                app.mostrarErro("Erro ao editar venda.", "");
+                e.printStackTrace();
+            } catch (NumberFormatException e) {
+                app.mostrarErro("Erro Venda", "Por favor, insira valores numéricos válidos para preço e quantidade.");
+                e.printStackTrace();
+            }
+        }
+
+    }
+
+        
+    @FXML
+    void clickTabela(MouseEvent event) {
+
+        Venda selecionadoVenda = tabelaVendas.getSelectionModel().getSelectedItem();
+        if (selecionadoVenda != null) {
+
+                this.entradaVendaId.setText(String.valueOf(selecionadoVenda.getId()));
+                this.entradaVendaPreco.setText(String.valueOf(selecionadoVenda.getPreco()));
+                this.entradaVendaProdutoId.setText(String.valueOf(selecionadoVenda.getProdutoId()));
+                this.entradaVendaClienteId.setText(String.valueOf(selecionadoVenda.getClienteId()));
+                this.entradaVendaFuncionarioId.setText(String.valueOf(selecionadoVenda.getFuncionarioId()));
+                this.entradaVendaData.setValue(LocalDate.parse(selecionadoVenda.getData(), DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+
+        } else {}
     }
 
     @FXML
     void clickVendasEditar(ActionEvent event) {
+        int produtoSelectionado = Integer.parseInt(this.entradaVendaId.getText());
+        App app = new App();
 
+        // Remove o produto selecionado do arquivo CSV
+        Csv csv = new Csv();
+        try {
+            csv.removePorId("src\\dados\\produtos.csv", produtoSelectionado);
+        } catch (IOException e) {
+            app.mostrarErro("Erro ao editar produto.", "");
+            e.printStackTrace();
+            return;
+        }
+
+        // // Atualiza o arquivo CSV com os novos dados do produto
+
+        String precoText = this.entradaVendaPreco.getText();
+        String quantText = this.entradaVendaProdutoId.getText();
+        if (!precoText.trim().isEmpty() && !quantText.trim().isEmpty()) {
+            try {
+                Produto produtoAtualizado = new Produto(produtoSelectionado, this.entradaVendaId.getText(),
+                        Double.parseDouble(precoText), Integer.parseInt(quantText),
+                        this.entradaVendaFuncionarioId.getText());
+                csv.adicionar(produtoAtualizado.toString(), "src\\dados\\produtos.csv");
+                this.mostrarVendasTabela();
+            } catch (IOException e) {
+                app.mostrarErro("Erro ao editar produto.", "");
+                e.printStackTrace();
+            } catch (NumberFormatException e) {
+                app.mostrarErro("Erro Produto", "Por favor, insira valores numéricos válidos para preço e quantidade.");
+                e.printStackTrace();
+            }
+        }
     }
 
     @FXML
     void clickVendasRemover(ActionEvent event) {
+        Csv csv = new Csv();
+        App app = new App();
 
+        Venda vendaSelecionada = this.tabelaVendas.getSelectionModel().getSelectedItem();
+        if (vendaSelecionada != null) {
+            try {
+                csv.removePorId("src\\dados\\vendas.csv", vendaSelecionada.getId());
+                mostrarVendasTabela();
+            } catch (IOException e) {
+                app.mostrarErro("Erro ao remover venda.", "");
+                e.printStackTrace();
+            }
+        } else {}
+    
     }
+
+    
 
     @FXML
     void pesquisaEntradaMudou(KeyEvent event) {

@@ -86,9 +86,10 @@ public class ClienteControle extends AnchorPane{
         ObservableList<Cliente> listclientes = FXCollections.observableArrayList();
 
         Csv csv = new Csv();
-        List<List<String>> records = csv.loadCSV("src\\dados\\clientes.csv");
 
         try{
+            List<List<String>> records = csv.carregaCSV("src\\dados\\clientes.csv");
+
             for(List<String> rs: records){
 
                 Cliente cliente = new Cliente(

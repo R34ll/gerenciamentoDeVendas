@@ -10,14 +10,14 @@
 
 <fx:root prefHeight="600.0" prefWidth="350.0" style="-fx-background-color: white;" type="AnchorPane" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <TableView fx:id="tabelaVendas" focusTraversable="false" layoutX="13.0" layoutY="45.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="645.0">
+      <TableView fx:id="tabelaVendas" focusTraversable="false" layoutX="13.0" layoutY="45.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#clickTabela" prefHeight="400.0" prefWidth="650.0">
         <columns>
           <TableColumn fx:id="ColId" prefWidth="28.0" text="ID" />
-          <TableColumn fx:id="ColPreco" prefWidth="103.0" text="Preço Total" />
-            <TableColumn fx:id="ColData" prefWidth="60.0" text="Data" />
-            <TableColumn fx:id="colProdutoId" prefWidth="85.0" text="Produto ID" />
-            <TableColumn fx:id="colClienteId" minWidth="0.0" prefWidth="186.0" text="Cliente ID" />
-            <TableColumn fx:id="colFuncionarioId" prefWidth="266.0" text="Funcionario ID                      " />
+          <TableColumn fx:id="ColPreco" prefWidth="112.0" text="Preço Total" />
+            <TableColumn fx:id="colProdutoId" prefWidth="149.0" text="Produto ID" />
+            <TableColumn fx:id="colClienteId" minWidth="0.0" prefWidth="113.0" text="Cliente ID" />
+            <TableColumn fx:id="colFuncionarioId" prefWidth="118.0" text="Funcionario ID" />
+            <TableColumn fx:id="ColData" prefWidth="150.0" text="Data" />
         </columns>
       </TableView>
       <Button fx:id="btnVendasAdicionar" layoutX="44.0" layoutY="541.0" mnemonicParsing="false" onAction="#clickVendasAdicionar" prefHeight="34.0" prefWidth="179.0" style="-fx-background-color: cornflowerblue;" text="Adicionar" textFill="WHITE">
@@ -33,9 +33,11 @@
             <Cursor fx:constant="HAND" />
          </cursor></Button>
       <TextField fx:id="vendaPesquisaEntrada" layoutX="66.0" layoutY="10.0" onKeyPressed="#pesquisaEntradaMudou" prefHeight="25.0" prefWidth="557.0" promptText="Pesquisar" />
-      <TextField fx:id="entradaVendaPreco" layoutX="87.0" layoutY="469.0" prefHeight="25.0" prefWidth="156.0" promptText="Preço Total" />
-      <TextField fx:id="entradaVendaProdutoId" layoutX="449.0" layoutY="469.0" prefHeight="25.0" prefWidth="127.0" promptText="Produto ID" />
-      <TextField fx:id="entradaVendaClienteId" layoutX="87.0" layoutY="500.0" prefHeight="25.0" prefWidth="487.0" promptText="Cliente ID" />
-      <DatePicker fx:id="entradaVendaVenda" layoutX="261.0" layoutY="469.0" />
+      <TextField fx:id="entradaVendaPreco" layoutX="139.0" layoutY="469.0" prefHeight="25.0" prefWidth="136.0" promptText="Preço Total" />
+      <TextField fx:id="entradaVendaProdutoId" layoutX="285.0" layoutY="469.0" prefHeight="25.0" prefWidth="151.0" promptText="Produto ID" />
+      <TextField fx:id="entradaVendaClienteId" layoutX="160.0" layoutY="504.0" prefHeight="25.0" prefWidth="165.0" promptText="Cliente ID" />
+      <DatePicker fx:id="entradaVendaData" layoutX="444.0" layoutY="469.0" />
+      <TextField fx:id="entradaVendaId" editable="false" layoutX="46.0" layoutY="469.0" prefHeight="25.0" prefWidth="83.0" promptText="ID" />
+      <TextField fx:id="entradaVendaFuncionarioId" editable="false" layoutX="335.0" layoutY="504.0" prefHeight="25.0" prefWidth="165.0" promptText="Funcionario ID" />
    </children>
 </fx:root>
