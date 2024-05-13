@@ -21,6 +21,9 @@ public class PrincipalControle {
     private Button btnVendas;
 
     @FXML
+    private Button btnNovaVenda;
+
+    @FXML
     private BorderPane painelBranco;
 
     @FXML
@@ -31,7 +34,7 @@ public class PrincipalControle {
 
     @FXML
     void clickClientes(ActionEvent event) {
-        AnchorPane clientes = new ClienteControle(this.funcionario);
+        AnchorPane clientes = new ClienteControle();
         painelBranco.setCenter(clientes);
     }
 
@@ -50,10 +53,18 @@ public class PrincipalControle {
 
 
     @FXML
+    void clickNovaVenda(ActionEvent event) {
+        AnchorPane novaVenda = new NovaVendaControle(this.funcionario);
+        painelBranco.setCenter(novaVenda);
+    }
+
+
+    @FXML
     void clickSair(ActionEvent event) {
             Stage stage = (Stage) btnSair.getScene().getWindow();
             stage.close();
     }
+
 
 
     public void setFuncionario(Funcionario funcionario) {

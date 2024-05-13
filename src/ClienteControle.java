@@ -71,7 +71,7 @@ public class ClienteControle extends AnchorPane{
     
  
 
-    public ClienteControle(Funcionario funcionario){
+    public ClienteControle(){
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("cenas/ClienteCena.fxml"));
 
         fxmlLoader.setRoot(this);

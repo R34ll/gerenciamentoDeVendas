@@ -37,6 +37,11 @@
                   <Font size="20.0" />
                </font>
             </Text>
+            <Button fx:id="btnNovaVenda" layoutX="16.0" layoutY="372.0" mnemonicParsing="false" onAction="#clickNovaVenda" prefHeight="48.0" prefWidth="300.0" style="-fx-background-color: white;" text="Nova Venda">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
          </children>
       </AnchorPane>
       <BorderPane fx:id="painelBranco" layoutX="328.0" prefHeight="600.0" prefWidth="672.0" />

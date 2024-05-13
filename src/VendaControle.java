@@ -109,7 +109,7 @@ public class VendaControle extends AnchorPane{
                     Double.parseDouble(rs.get(1)), 
                     rs.get(2), 
 
-                    Integer.parseInt( rs.get(3)), 
+                    rs.get(3), 
                     Integer.parseInt(rs.get(4)), 
                     Integer.parseInt(rs.get(5))
                 );
@@ -175,7 +175,7 @@ public class VendaControle extends AnchorPane{
                         ultimoID+1, 
                         Double.parseDouble(precoText),
                         dataText,
-                        Integer.parseInt(produtoIdText),
+                        produtoIdText,
                         Integer.parseInt(clientIdText),
                         0//Integer.parseInt(funcionarioIdText)
                     );

@@ -1,7 +1,3 @@
-
-
-
-
 import java.io.IOException;
 
 import javafx.application.Application;
@@ -10,13 +6,13 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import modelos.Funcionario;
 
 
 
 public class App extends Application {
-    
     private static Stage stg; // // Stage object to hold the main stage reference
 
     /* Main method to launch the application */
@@ -28,7 +24,6 @@ public class App extends Application {
     @Override
     public void start(Stage principalStage) throws Exception {
         stg = principalStage; // Store the reference to the main stage
-
         principalStage.setResizable(false);         // Set the stage to be non-resizable
 
 
@@ -44,7 +39,7 @@ public class App extends Application {
             principalStage.show(); //
 
         } catch (IOException e) {
-            mostrarErro("Login Erro", "Um erro ocorreu durante a inicialização do sistema!");
+            this.mostrarErro("Login Erro", "Um erro ocorreu durante a inicialização do sistema!");
             e.printStackTrace(); // Print the stack trace for debugging
 
         }
@@ -76,4 +71,6 @@ public class App extends Application {
         alert.showAndWait();
     }
 
+
 }
+

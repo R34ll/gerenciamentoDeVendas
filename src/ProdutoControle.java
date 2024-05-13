@@ -88,9 +88,7 @@ class ProdutoControle extends AnchorPane {
             List<List<String>> records = csv.carregaCSV("src\\dados\\produtos.csv");
 
             for (List<String> rs : records) {
-
-                Produto produto = new Produto(Integer.parseInt(rs.get(0)), rs.get(1), Double.parseDouble(rs.get(2)),
-                        Integer.parseInt(rs.get(3)), rs.get(4));
+                Produto produto = new Produto(Integer.parseInt(rs.get(0)), rs.get(1), Double.parseDouble(rs.get(2)),Integer.parseInt(rs.get(3)), rs.get(4));
                 listProdutos.add(produto);
             }
         } catch (Exception ex) {
