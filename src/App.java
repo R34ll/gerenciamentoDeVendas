@@ -11,6 +11,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
+import modelos.Funcionario;
 
 
 
@@ -51,9 +52,18 @@ public class App extends Application {
     }
 
     /* Method to switch scenes */
-    public void trocarCena(String fxml) throws IOException{
+    public void trocarCena(String fxml, Funcionario funcionario) throws IOException{
         // Load the new FXML file
-        Parent pane = FXMLLoader.load(getClass().getResource(fxml));
+        // Parent pane = FXMLLoader.load(getClass().getResource(fxml));
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(fxml));
+        Parent pane = loader.load();
+
+        if(loader.getController() instanceof PrincipalControle){
+            PrincipalControle controle = loader.getController();
+            controle.setFuncionario(funcionario);
+        }
+
         // Set the root of the current scene to the new FXML file
         stg.getScene().setRoot(pane);
     }

@@ -19,6 +19,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import modelos.Funcionario;
 import modelos.Produto;
 import modelos.Venda;
 
@@ -76,8 +77,10 @@ public class VendaControle extends AnchorPane{
     @FXML
     private TextField vendaPesquisaEntrada;
 
+    private Funcionario funcionario;
 
-     public VendaControle(){
+
+     public VendaControle(Funcionario funcionario){
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("cenas/VendaCena.fxml"));
 
         fxmlLoader.setRoot(this);
@@ -85,7 +88,8 @@ public class VendaControle extends AnchorPane{
 
         try {
             fxmlLoader.load();
-            this.mostrarVendasTabela();;
+            this.mostrarVendasTabela();
+            this.funcionario = funcionario;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -154,13 +158,13 @@ public class VendaControle extends AnchorPane{
         String precoText = this.entradaVendaPreco.getText();
         String produtoIdText = this.entradaVendaProdutoId.getText();
         String clientIdText = this.entradaVendaClienteId.getText();
-        String funcionarioIdText = this.entradaVendaFuncionarioId.getText();
+        // String funcionarioIdText = this.entradaVendaFuncionarioId.getText();
+        this.entradaVendaFuncionarioId.setText(String.valueOf(this.funcionario.getId()));
         String dataText = this.entradaVendaData.getValue().toString();
 
         if (!precoText.trim().isEmpty() && 
             !produtoIdText.trim().isEmpty() && 
             !clientIdText.trim().isEmpty() && 
-            !funcionarioIdText.trim().isEmpty() && 
             !dataText.trim().isEmpty()
             ) {
             
@@ -287,8 +291,6 @@ public class VendaControle extends AnchorPane{
         if (String.valueOf(item.getId()).contains(searchText)) {
             return true;
         }
-    
-
     
         if (String.valueOf(item.getPreco()).contains(searchText)) {
             return true;

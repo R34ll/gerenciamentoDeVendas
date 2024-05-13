@@ -15,6 +15,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import modelos.Cliente;
+import modelos.Funcionario;
 
 public class ClienteControle extends AnchorPane{
 
@@ -66,9 +67,11 @@ public class ClienteControle extends AnchorPane{
     @FXML
     private TableView<Cliente> tabelaClientes;
 
+    private Funcionario funcionario;
     
+ 
 
-    public ClienteControle(){
+    public ClienteControle(Funcionario funcionario){
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("cenas/ClienteCena.fxml"));
 
         fxmlLoader.setRoot(this);
@@ -76,13 +79,15 @@ public class ClienteControle extends AnchorPane{
 
         try {
             fxmlLoader.load();
+            this.setFuncionario(funcionario);
             this.mostrarclientesTabela();;
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-        public ObservableList<Cliente> carregarclientes(){
+
+    public ObservableList<Cliente> carregarclientes(){
         ObservableList<Cliente> listclientes = FXCollections.observableArrayList();
 
         Csv csv = new Csv();
@@ -137,6 +142,10 @@ public class ClienteControle extends AnchorPane{
     @FXML
     void clickClientesRemover(ActionEvent event) {
 
+    }
+
+    public void setFuncionario(Funcionario funcionario) {
+        this.funcionario = funcionario;
     }
 
     @FXML

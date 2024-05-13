@@ -1,12 +1,12 @@
-id,nome,cadastro,senha
-0,JolioSilva,12-04-2024,123456
-1,MariaSantos,13-04-2024,abc123
-2,CarlosOliveira,14-04-2024,qwerty
-3,AnaSouza,15-04-2024,987654
-4,PedroFerreira,16-04-2024,654321
-5,JulianaLima,17-04-2024,111222
-6,LuizCosta,18-04-2024,333444
-7,FernandaSantos,19-04-2024,555666
-8,RafaelPereira,20-04-2024,777888
-9,CamilaOliveira,21-04-2024,999000
-10,arthur,21-04-2024,123
+id,usuario,nome,cadastro,senha
+0,JolioSilva,Jolio Silva,12-04-2024,123456
+1,MariaSantos,Maria Santos,13-04-2024,abc123
+2,CarlosOliveira,Carlos Oliveira,14-04-2024,qwerty
+3,AnaSouza,Ana Souza,15-04-2024,987654
+4,PedroFerreira,Pedro Ferreira,16-04-2024,654321
+5,JulianaLima,Juliana Lima,17-04-2024,111222
+6,LuizCosta,Luiz Costa,18-04-2024,333444
+7,FernandaSantos,Fernanda Santos,19-04-2024,555666
+8,RafaelPereira,Rafael Pereira,20-04-2024,777888
+9,CamilaOliveira,Camila Oliveira,21-04-2024,999000
+10,arthur,Arthur,21-04-2024,123

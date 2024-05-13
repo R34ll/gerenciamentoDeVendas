@@ -3,14 +3,13 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import modelos.Funcionario;
 
 public class PrincipalControle {
-
-
     @FXML
     private AnchorPane MenuBar;
-
 
     @FXML
     private Button btnProdutos;
@@ -24,36 +23,44 @@ public class PrincipalControle {
     @FXML
     private BorderPane painelBranco;
 
-
+    @FXML
+    private Text funcionarioNome;
+    
+    private Funcionario funcionario;
 
 
     @FXML
     void clickClientes(ActionEvent event) {
-        // System.out.println("Click Funcionarios");
-        AnchorPane clientes = new ClienteControle();
+        AnchorPane clientes = new ClienteControle(this.funcionario);
         painelBranco.setCenter(clientes);
     }
 
-    @FXML
-    void clickSair(ActionEvent event) {
-        // Redirect to login Scene
-        // AnchorPane login = new LoginPainel();
-        // painelBranco.setCenter(login);        
-            Stage stage = (Stage) btnSair.getScene().getWindow();
-            stage.close();
-    }
 
     @FXML
     void clickVendas(ActionEvent event) {
-        AnchorPane vendas = new VendaControle();
+        AnchorPane vendas = new VendaControle(this.funcionario);
         painelBranco.setCenter(vendas);
     }
 
     @FXML
     void clickProdutos(ActionEvent event) {
-        
         AnchorPane produtos = new ProdutoControle();
         painelBranco.setCenter(produtos);
     }
 
+
+    @FXML
+    void clickSair(ActionEvent event) {
+            Stage stage = (Stage) btnSair.getScene().getWindow();
+            stage.close();
+    }
+
+
+    public void setFuncionario(Funcionario funcionario) {
+        this.funcionario = funcionario;
+        this.funcionarioNome.setText(this.funcionario.getNome());
+    }
+
 }
+
+
