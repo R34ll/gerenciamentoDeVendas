@@ -26,11 +26,13 @@ public class LoginControle extends AnchorPane{
     private Label wrongLogin;   
 
     private Funcionario funcionario;
+    private Csv csv;
+
 
     @FXML
     void usuarioLogin(ActionEvent event) throws IOException {
         App app = new App();
-        Csv csv = new Csv();
+        this.csv = new Csv("src\\dados\\funcionarios.csv");
 
         String enteredUsername = username.getText().trim().toLowerCase();
         String enteredPassword = password.getText().trim();
@@ -42,7 +44,7 @@ public class LoginControle extends AnchorPane{
             return; // Exit the method if fields are empty
         }
     
-        List<List<String>> content = csv.carregaCSV("src\\dados\\funcionarios.csv");
+        List<List<String>> content = this.csv.carregaCSV();
     
         boolean loggedIn = false;
         for (List<String> c : content) {

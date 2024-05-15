@@ -1,3 +1,6 @@
+import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import dados.Csv;
@@ -13,6 +16,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import modelos.Cliente;
 import modelos.Funcionario;
@@ -26,7 +30,7 @@ public class ClienteControle extends AnchorPane{
     private TableColumn<Cliente, String> ColCPF;
 
     @FXML
-    private TableColumn<Cliente, Integer> ColId;
+    private TableColumn<Cliente, Integer> colId;
 
     @FXML
     private TableColumn<Cliente, String> ColNome;
@@ -53,25 +57,24 @@ public class ClienteControle extends AnchorPane{
     private TableColumn<Cliente, String> colUltimaCompra;
 
     @FXML
-    private TextField entradaClienteClienteId;
+    private TextField entradaClienteCpf;
 
     @FXML
     private TextField entradaClienteNome;
 
     @FXML
-    private TextField entradaClienteNome1;
+    private TextField entradaClienteTelefone;
 
-    @FXML
-    private TextField entradaClienteProdutoId;
 
     @FXML
     private TableView<Cliente> tabelaClientes;
 
     private Funcionario funcionario;
+    private Csv csv;
     
  
 
-    public ClienteControle(){
+    public ClienteControle(Funcionario funcionarioArg){
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("cenas/ClienteCena.fxml"));
 
         fxmlLoader.setRoot(this);
@@ -79,8 +82,10 @@ public class ClienteControle extends AnchorPane{
 
         try {
             fxmlLoader.load();
-            this.setFuncionario(funcionario);
-            this.mostrarclientesTabela();;
+            this.csv = new Csv("src\\dados\\clientes.csv");
+            this.funcionario = funcionarioArg;
+            this.mostrarclientesTabela();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -90,10 +95,10 @@ public class ClienteControle extends AnchorPane{
     public ObservableList<Cliente> carregarclientes(){
         ObservableList<Cliente> listclientes = FXCollections.observableArrayList();
 
-        Csv csv = new Csv();
 
         try{
-            List<List<String>> records = csv.carregaCSV("src\\dados\\clientes.csv");
+            // List<List<String>> records = this.csv.carregaCSV("src\\dados\\clientes.csv");
+            List<List<String>> records = this.csv.carregaCSV();
 
             for(List<String> rs: records){
 
@@ -118,7 +123,7 @@ public class ClienteControle extends AnchorPane{
     public void mostrarclientesTabela(){
         ObservableList<Cliente> lista = this.carregarclientes();
 
-        this.ColId.setCellValueFactory(new PropertyValueFactory<Cliente, Integer>("id"));
+        this.colId.setCellValueFactory(new PropertyValueFactory<Cliente, Integer>("id"));
         this.ColNome.setCellValueFactory(new PropertyValueFactory<Cliente, String>("nome"));
         this.ColCPF.setCellValueFactory(new PropertyValueFactory<Cliente, String>("cpf"));
         this.colTelefone.setCellValueFactory(new PropertyValueFactory<Cliente, Integer>("telefone"));
@@ -131,21 +136,94 @@ public class ClienteControle extends AnchorPane{
 
     @FXML
     void clickClientesAdicionar(ActionEvent event) {
+        App app = new App();
+        // Check if CPF or telefone is already in database
+
+        if(this.entradaClienteNome.getText().isEmpty() && this.entradaClienteCpf.getText().isEmpty() && this.entradaClienteCpf.getText().isEmpty()){
+            app.mostrarErro("Erro Cliente", "Por favor, preencha os campos de Nome, CPF e Telefone.");
+            return;
+        }
+
+        try {
+            int ultimoId = this.csv.getLastID();
+            Cliente cliente = new Cliente(ultimoId+1, this.entradaClienteNome.getText(), this.entradaClienteCpf.getText(), this.entradaClienteCpf.getText(), LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")).toString(), LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")).toString());
+            cliente.salvar();
+            this.mostrarclientesTabela();
+
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
+        
 
     }
 
     @FXML
     void clickClientesEditar(ActionEvent event) {
+        Cliente clienteSelectionado = tabelaClientes.getSelectionModel().getSelectedItem();
+        App app = new App();
 
+        try {
+            csv.removePorId(clienteSelectionado.getId());
+        } catch (IOException e) {
+            app.mostrarErro("Erro ao editar Cliente.", "");
+            e.printStackTrace();
+            return;
+        }
+
+        String nomeText = this.entradaClienteNome.getText();
+        String cpfText = this.entradaClienteCpf.getText();
+        String telText = this.entradaClienteTelefone.getText();
+
+        if (nomeText.trim().isEmpty() && cpfText.trim().isEmpty() && telText.trim().isEmpty()) {
+            app.mostrarErro("Erro Cliente", "Preencha todos os campoas.");
+        }
+            try {
+                Cliente clienteAtualizado = new Cliente(clienteSelectionado.getId(), nomeText, cpfText, telText, clienteSelectionado.getCadastro(), clienteSelectionado.getUltimaCompra());
+                clienteAtualizado.update();
+                this.mostrarclientesTabela();
+            } catch (Exception e) {
+                app.mostrarErro("Erro ao editar Cliente.", "");
+                e.printStackTrace();
+            } 
     }
 
     @FXML
     void clickClientesRemover(ActionEvent event) {
 
+        App app = new App();
+
+        Cliente clienteSelecionado = tabelaClientes.getSelectionModel().getSelectedItem();
+        if (clienteSelecionado != null) {
+            try {
+                csv.removePorId(clienteSelecionado.getId());
+                this.mostrarclientesTabela();
+            } catch (IOException e) {
+                app.mostrarErro("Erro ao remover produto.", "");
+                e.printStackTrace();
+            }
+        } else {
+        }
+
     }
 
-    public void setFuncionario(Funcionario funcionario) {
-        this.funcionario = funcionario;
+    public void setFuncionario(Funcionario funcionarioArg) {
+        this.funcionario = funcionarioArg;
+    }
+
+
+    @FXML
+    void clickTabela(MouseEvent event) {
+
+        Cliente selecionadoCliente = tabelaClientes.getSelectionModel().getSelectedItem();
+
+        System.out.println(">>>>>"+this.colId.getText());
+
+        if (selecionadoCliente != null) {
+            this.entradaClienteNome.setText(selecionadoCliente.getNome());
+            this.entradaClienteCpf.setText(String.valueOf(selecionadoCliente.getCpf()));
+            this.entradaClienteTelefone.setText(String.valueOf(selecionadoCliente.getTelefone()));
+        } else {
+        }
     }
 
     @FXML
@@ -187,7 +265,7 @@ public class ClienteControle extends AnchorPane{
             return true;
         }
 
-        if (item.getUltima_compra().contains(searchText)) {
+        if (item.getUltimaCompra().contains(searchText)) {
             return true;
         }
     

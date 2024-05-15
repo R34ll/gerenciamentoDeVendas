@@ -9,9 +9,9 @@
 
 <fx:root prefHeight="600.0" prefWidth="670.0" style="-fx-background-color: white;" type="AnchorPane" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <TableView fx:id="tabelaClientes" focusTraversable="false" layoutX="13.0" layoutY="45.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="645.0">
+      <TableView fx:id="tabelaClientes" focusTraversable="false" layoutX="13.0" layoutY="45.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#clickTabela" prefHeight="400.0" prefWidth="645.0">
         <columns>
-          <TableColumn fx:id="ColId" prefWidth="28.0" text="ID" />
+          <TableColumn fx:id="colId" prefWidth="28.0" text="ID" />
           <TableColumn fx:id="ColNome" prefWidth="103.0" text="Nome" />
             <TableColumn fx:id="ColCPF" prefWidth="60.0" text="CPF" />
             <TableColumn fx:id="colTelefone" prefWidth="85.0" text="Telefone" />
@@ -33,7 +33,7 @@
          </cursor></Button>
       <TextField fx:id="ClientePesquisaEntrada" layoutX="66.0" layoutY="10.0" onKeyPressed="#pesquisaEntradaMudou" prefHeight="25.0" prefWidth="557.0" promptText="Pesquisar" />
       <TextField fx:id="entradaClienteNome" layoutX="87.0" layoutY="469.0" prefHeight="25.0" prefWidth="156.0" promptText="Nome" />
-      <TextField fx:id="entradaClienteclienteId" layoutX="449.0" layoutY="469.0" prefHeight="25.0" prefWidth="127.0" promptText="Telefone" />
-      <TextField fx:id="entradaClienteNome1" layoutX="265.0" layoutY="469.0" prefHeight="25.0" prefWidth="156.0" promptText="CPF" />
+      <TextField fx:id="entradaClienteCpf" layoutX="265.0" layoutY="469.0" prefHeight="25.0" prefWidth="156.0" promptText="CPF" />
+      <TextField fx:id="entradaClienteTelefone" layoutX="449.0" layoutY="469.0" prefHeight="25.0" prefWidth="127.0" promptText="Telefone" />
    </children>
 </fx:root>

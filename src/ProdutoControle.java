@@ -65,6 +65,8 @@ class ProdutoControle extends AnchorPane {
     @FXML
     private TextField entradaProdutoId;
 
+    private Csv csv;
+
     public ProdutoControle() {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("cenas/ProdutoCena.fxml"));
 
@@ -73,8 +75,9 @@ class ProdutoControle extends AnchorPane {
 
         try {
             fxmlLoader.load();
+            this.csv = new Csv("src\\dados\\produtos.csv");
+
             this.mostrarProdutosTabela();
-            ;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -82,10 +85,9 @@ class ProdutoControle extends AnchorPane {
 
     public ObservableList<Produto> carregarProdutos() {
         ObservableList<Produto> listProdutos = FXCollections.observableArrayList();
-        Csv csv = new Csv();
 
         try {
-            List<List<String>> records = csv.carregaCSV("src\\dados\\produtos.csv");
+            List<List<String>> records = csv.carregaCSV();
 
             for (List<String> rs : records) {
                 Produto produto = new Produto(Integer.parseInt(rs.get(0)), rs.get(1), Double.parseDouble(rs.get(2)),Integer.parseInt(rs.get(3)), rs.get(4));
@@ -112,7 +114,6 @@ class ProdutoControle extends AnchorPane {
 
     @FXML
     void clickProdutosAdicionar(ActionEvent event) {
-        Csv csv = new Csv();
         App app = new App();
 
         String precoText = this.entradaProdutoPreco.getText();
@@ -125,7 +126,7 @@ class ProdutoControle extends AnchorPane {
         }
 
         try {
-            int ultimoID = csv.getLastID("src\\dados\\produtos.csv");
+            int ultimoID = csv.getLastID();
 
             Produto produto = new Produto(
                     ultimoID + 1,
@@ -134,7 +135,7 @@ class ProdutoControle extends AnchorPane {
                     Integer.parseInt(quantText),
                     this.entradaProdutoDescricao.getText());
 
-            csv.adicionar(produto.toString(), "src\\dados\\produtos.csv");
+            csv.adicionar(produto.toString());
             this.mostrarProdutosTabela();
 
         } catch (IOException e) {
@@ -167,9 +168,8 @@ class ProdutoControle extends AnchorPane {
         App app = new App();
 
         // Remove o produto selecionado do arquivo CSV
-        Csv csv = new Csv();
         try {
-            csv.removePorId("src\\dados\\produtos.csv", produtoSelectionado);
+            csv.removePorId(produtoSelectionado);
         } catch (IOException e) {
             app.mostrarErro("Erro ao editar produto.", "");
             e.printStackTrace();
@@ -181,10 +181,8 @@ class ProdutoControle extends AnchorPane {
         String quantText = this.entradaProdutoQuant.getText();
         if (!precoText.trim().isEmpty() && !quantText.trim().isEmpty()) {
             try {
-                Produto produtoAtualizado = new Produto(produtoSelectionado, this.entradaProdutoNome.getText(),
-                        Double.parseDouble(precoText), Integer.parseInt(quantText),
-                        this.entradaProdutoDescricao.getText());
-                csv.adicionar(produtoAtualizado.toString(), "src\\dados\\produtos.csv");
+                Produto produtoAtualizado = new Produto(produtoSelectionado, this.entradaProdutoNome.getText(),Double.parseDouble(precoText), Integer.parseInt(quantText),this.entradaProdutoDescricao.getText());
+                csv.adicionar(produtoAtualizado.toString());
                 this.mostrarProdutosTabela();
             } catch (IOException e) {
                 app.mostrarErro("Erro ao editar produto.", "");
@@ -198,13 +196,12 @@ class ProdutoControle extends AnchorPane {
 
     @FXML
     void clickProdutosRemover(ActionEvent event) {
-        Csv csv = new Csv();
         App app = new App();
 
         Produto produtoSelecionado = tabelaProdutos.getSelectionModel().getSelectedItem();
         if (produtoSelecionado != null) {
             try {
-                csv.removePorId("src\\dados\\produtos.csv", produtoSelecionado.getId());
+                csv.removePorId(produtoSelecionado.getId());
                 mostrarProdutosTabela();
             } catch (IOException e) {
                 app.mostrarErro("Erro ao remover produto.", "");

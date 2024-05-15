@@ -1,4 +1,5 @@
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -54,7 +55,7 @@ public class NovaVendaControle extends AnchorPane{
     
     private Funcionario funcionario;
 
-    public NovaVendaControle(Funcionario funcionario){
+    public NovaVendaControle(Funcionario funcionarioArg){
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("cenas/NovaVendaCena.fxml"));
 
         fxmlLoader.setRoot(this);
@@ -62,7 +63,7 @@ public class NovaVendaControle extends AnchorPane{
 
         try {
             fxmlLoader.load();
-            this.funcionario =funcionario;
+            this.funcionario =funcionarioArg;
             this.mostrarTabelas();
             ;
         } catch (Exception e) {
@@ -74,7 +75,7 @@ public class NovaVendaControle extends AnchorPane{
         this.tabelaProdutos.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
         ProdutoControle pc = new ProdutoControle();
-        ClienteControle cc = new ClienteControle();
+        ClienteControle cc = new ClienteControle(this.funcionario);
 
         ObservableList<Produto> listaProdutos = pc.carregarProdutos();
         ObservableList<Cliente> listaCliente = cc.carregarclientes();
@@ -125,7 +126,7 @@ public class NovaVendaControle extends AnchorPane{
             }
 
             produtosId =  produtosId.substring(0, produtosId.length()-1);
-            Venda venda = new Venda(0, Double.parseDouble(this.entradaProdutoPreco.getText()), String.valueOf(LocalDate.now()), produtosId, selecionadoCliente.getId(), this.funcionario.getId());
+            Venda venda = new Venda(0, Double.parseDouble(this.entradaProdutoPreco.getText()), LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")).toString(), produtosId, selecionadoCliente.getId(), this.funcionario.getId());
 
             try {
                 venda.setId(venda.getLastId()+1);

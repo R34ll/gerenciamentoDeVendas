@@ -34,7 +34,7 @@ public class PrincipalControle {
 
     @FXML
     void clickClientes(ActionEvent event) {
-        AnchorPane clientes = new ClienteControle();
+        AnchorPane clientes = new ClienteControle(this.funcionario);
         painelBranco.setCenter(clientes);
     }
 

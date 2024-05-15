@@ -16,11 +16,17 @@ import java.util.Scanner;
 
 
 public class Csv {
-    public List<List<String>> carregaCSV(String path) throws IOException{
+    private String caminhoArquivo;
+    public Csv(String caminhoArquivoArg){
+        this.caminhoArquivo = caminhoArquivoArg;
+    }
+    
+
+    public List<List<String>> carregaCSV() throws IOException{
 
         List<List<String>> recordes = new ArrayList<>();
         
-        try(BufferedReader reader = new BufferedReader(new FileReader(path, StandardCharsets.UTF_8))){
+        try(BufferedReader reader = new BufferedReader(new FileReader(this.caminhoArquivo, StandardCharsets.UTF_8))){
             // Ignora a primeira linha(header)
             reader.readLine();
             
@@ -52,21 +58,20 @@ public class Csv {
 
     
 
-    public void adicionar(String conteudo, String path) throws IOException {
-        try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path, true), StandardCharsets.UTF_8))) {
+    public void adicionar(String conteudo) throws IOException {
+        try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(this.caminhoArquivo, true), StandardCharsets.UTF_8))) {
 
             writer.newLine();
             writer.write(conteudo);
-            System.out.println("Conteúdo salvo com sucesso.");
         } catch (IOException e) {
             throw new IOException("Erro ao adicionar conteúdo ao arquivo CSV: " + e.getMessage());
         }
     }
 
 
-    public  void removePorId(String csvFilePath, int id) throws IOException {
+    public  void removePorId(int id) throws IOException {
         try {
-            File inputFile = new File(csvFilePath);
+            File inputFile = new File(this.caminhoArquivo);
             File tempFile = new File("temp.csv");
 
             BufferedReader reader = new BufferedReader(new FileReader(inputFile, StandardCharsets.UTF_8));
@@ -104,14 +109,13 @@ public class Csv {
                 throw new IOException("Erro ao renomear o arquivo temporário.");
             }
 
-            System.out.println("Registro removido com sucesso.");
         } catch (IOException e) {
             throw new IOException("Erro ao remover registro do arquivo CSV: " + e.getMessage());
         }
     }
 
-    public int getLastID(String path) throws IOException {
-        try (BufferedReader reader = new BufferedReader(new FileReader(path))) {
+    public int getLastID() throws IOException {
+        try (BufferedReader reader = new BufferedReader(new FileReader(this.caminhoArquivo))) {
             String linha;
             String ultimaLinha = null;
             while ((linha = reader.readLine()) != null) {

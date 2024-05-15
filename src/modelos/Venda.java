@@ -50,19 +50,19 @@ public class Venda {
     }
 
     public int getLastId() throws IOException{
-        Csv csv = new Csv();
-        return csv.getLastID("src\\dados\\vendas.csv");
+        Csv csv = new Csv("src\\dados\\vendas.csv");
+        return csv.getLastID();
 
     }
 
     public void salvar() throws Exception{
-        Csv csv = new Csv();
+        Csv csv = new Csv("src\\dados\\vendas.csv");
 
 
         try {
             // int ultimoID = csv.getLastID("src\\dados\\produtos.csv");
 
-            csv.adicionar(this.toString(), "src\\dados\\vendas.csv");
+            csv.adicionar(this.toString());
 
         } catch (IOException e) {
             // app.mostrarErro("Erro Produto", "Um erro ocorreu ao adicionar novo Produto!");

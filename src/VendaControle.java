@@ -78,9 +78,10 @@ public class VendaControle extends AnchorPane{
     private TextField vendaPesquisaEntrada;
 
     private Funcionario funcionario;
+    private Csv csv;
 
 
-     public VendaControle(Funcionario funcionario){
+     public VendaControle(Funcionario funcionarioArg){
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("cenas/VendaCena.fxml"));
 
         fxmlLoader.setRoot(this);
@@ -88,8 +89,10 @@ public class VendaControle extends AnchorPane{
 
         try {
             fxmlLoader.load();
+            this.csv = new Csv("src\\dados\\vendas.csv");
+            this.funcionario = funcionarioArg;
+
             this.mostrarVendasTabela();
-            this.funcionario = funcionario;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -97,10 +100,9 @@ public class VendaControle extends AnchorPane{
 
     public ObservableList<Venda> carregarVendas(){
         ObservableList<Venda> listVendas = FXCollections.observableArrayList();
-        Csv csv = new Csv();
 
         try{
-            List<List<String>> records = csv.carregaCSV("src\\dados\\vendas.csv");
+            List<List<String>> records = csv.carregaCSV();
             for(List<String> rs: records){
 
 
@@ -145,9 +147,8 @@ public class VendaControle extends AnchorPane{
         App app = new App();
 
         // Remove o venda selecionado do arquivo CSV
-        Csv csv = new Csv();
         try {
-            csv.removePorId("src\\dados\\vendas.csv", vendaSelectionado);
+            csv.removePorId(vendaSelectionado);
         } catch (IOException e) {
             app.mostrarErro("Erro ao editar venda.", "");
             e.printStackTrace();
@@ -169,7 +170,7 @@ public class VendaControle extends AnchorPane{
             ) {
             
                 try {
-                int ultimoID = csv.getLastID("src\\dados\\vendas.csv");
+                int ultimoID = csv.getLastID();
 
                 Venda vendaAtualizado = new Venda(
                         ultimoID+1, 
@@ -179,7 +180,7 @@ public class VendaControle extends AnchorPane{
                         Integer.parseInt(clientIdText),
                         0//Integer.parseInt(funcionarioIdText)
                     );
-                csv.adicionar(vendaAtualizado.toString(), "src\\dados\\vendas.csv");
+                csv.adicionar(vendaAtualizado.toString());
                 this.mostrarVendasTabela();
             } catch (IOException e) {
                 app.mostrarErro("Erro ao editar venda.", "");
@@ -215,9 +216,9 @@ public class VendaControle extends AnchorPane{
         App app = new App();
 
         // Remove o produto selecionado do arquivo CSV
-        Csv csv = new Csv();
+        Csv csvProduto = new Csv("src\\dados\\produtos.csv");
         try {
-            csv.removePorId("src\\dados\\produtos.csv", produtoSelectionado);
+            csvProduto.removePorId(produtoSelectionado);
         } catch (IOException e) {
             app.mostrarErro("Erro ao editar produto.", "");
             e.printStackTrace();
@@ -234,7 +235,7 @@ public class VendaControle extends AnchorPane{
                 Produto produtoAtualizado = new Produto(produtoSelectionado, this.entradaVendaId.getText(),
                         Double.parseDouble(precoText), Integer.parseInt(quantText),
                         this.entradaVendaFuncionarioId.getText());
-                csv.adicionar(produtoAtualizado.toString(), "src\\dados\\produtos.csv");
+                        csvProduto.adicionar(produtoAtualizado.toString());
                 this.mostrarVendasTabela();
             } catch (IOException e) {
                 app.mostrarErro("Erro ao editar produto.", "");
@@ -248,13 +249,12 @@ public class VendaControle extends AnchorPane{
 
     @FXML
     void clickVendasRemover(ActionEvent event) {
-        Csv csv = new Csv();
         App app = new App();
 
         Venda vendaSelecionada = this.tabelaVendas.getSelectionModel().getSelectedItem();
         if (vendaSelecionada != null) {
             try {
-                csv.removePorId("src\\dados\\vendas.csv", vendaSelecionada.getId());
+                csv.removePorId(vendaSelecionada.getId());
                 mostrarVendasTabela();
             } catch (IOException e) {
                 app.mostrarErro("Erro ao remover venda.", "");

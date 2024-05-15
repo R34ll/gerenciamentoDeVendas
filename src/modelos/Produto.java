@@ -43,11 +43,13 @@ public class Produto {
         this.quant = quant;
     }
 
+
+
     public void update() throws Exception{
-        Csv csv = new Csv();
+        Csv csv = new Csv("src\\dados\\produtos.csv");
 
         try {
-            csv.removePorId("src\\dados\\produtos.csv", this.id);
+            csv.removePorId(this.id);
         } catch (IOException e) {
             // app.mostrarErro("Erro ao editar produto.", "");
             e.printStackTrace();
@@ -58,7 +60,7 @@ public class Produto {
         if (!this.descricao.trim().isEmpty() && !nome.trim().isEmpty() ) {
             try {
                 Produto produtoAtualizado = this;//new Produto(this.id, this.nome,this.preco, this.quant,this.descricao);
-                csv.adicionar(produtoAtualizado.toString(), "src\\dados\\produtos.csv");
+                csv.adicionar(produtoAtualizado.toString());
             } catch (IOException e) {
                 // app.mostrarErro("Erro ao editar produto.", "");
                 e.printStackTrace();
