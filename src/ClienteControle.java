@@ -216,7 +216,6 @@ public class ClienteControle extends AnchorPane{
 
         Cliente selecionadoCliente = tabelaClientes.getSelectionModel().getSelectedItem();
 
-        System.out.println(">>>>>"+this.colId.getText());
 
         if (selecionadoCliente != null) {
             this.entradaClienteNome.setText(selecionadoCliente.getNome());
