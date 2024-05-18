@@ -55,24 +55,10 @@ public class Venda {
 
     }
 
-    public void salvar() throws Exception{
+    public void salvar() throws IOException {
         Csv csv = new Csv("src\\dados\\vendas.csv");
-
-
-        try {
-            // int ultimoID = csv.getLastID("src\\dados\\produtos.csv");
-
-            csv.adicionar(this.toString());
-
-        } catch (IOException e) {
-            // app.mostrarErro("Erro Produto", "Um erro ocorreu ao adicionar novo Produto!");
-            e.printStackTrace();
-        } catch (NumberFormatException e) {
-            // app.mostrarErro("Erro Produto", "Por favor, insira valores numéricos válidos para preço e quantidade.");
-            e.printStackTrace();
-        }
+        csv.adicionar(this.toString());
     }
-    
 
     @Override
     public String toString(){

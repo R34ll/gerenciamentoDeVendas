@@ -46,39 +46,15 @@ public class Cliente {
         return ultimaCompra;
     }
 
-    public void salvar(){
+     public void salvar() throws IOException, NumberFormatException {
         Csv csv = new Csv("src\\dados\\clientes.csv");
-
-
-        try {
-            csv.adicionar(this.toString());
-
-        } catch (IOException e) {
-            // app.mostrarErro("Erro Produto", "Um erro ocorreu ao adicionar novo Produto!");
-            e.printStackTrace();
-        } catch (NumberFormatException e) {
-            // app.mostrarErro("Erro Produto", "Por favor, insira valores numéricos válidos para preço e quantidade.");
-            e.printStackTrace();
-        }
+        csv.adicionar(this.toString());
     }
 
-
-    public void update() throws Exception{
+    public void update() throws Exception {
         Csv csv = new Csv("src\\dados\\clientes.csv");
-
-        try {
-            csv.removePorId(this.id);
-            Cliente cliente = this;
-            cliente.salvar();
-        } catch (IOException e) {
-            // app.mostrarErro("Erro ao editar produto.", "");
-            e.printStackTrace();
-            return;
-        }
-
-        // // Atualiza o arquivo CSV com os novos dados do produto
-
-
+        csv.removePorId(this.id);
+        this.salvar();
     }
 
     @Override 
