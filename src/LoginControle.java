@@ -1,6 +1,8 @@
+
 import java.io.IOException;
 import java.util.List;
 
+import Controles.Erro;
 import dados.Csv;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -26,7 +28,6 @@ public class LoginControle extends AnchorPane{
     private Label wrongLogin;   // Rótulo para exibir mensagens de erro de login
 
     private Funcionario funcionario; // Objeto para armazenar o funcionário logado
-    private Csv csv; // Objeto para manipulação do arquivo CSV
 
     private final String FUNCIONARIOS_CSV = "src\\dados\\funcionarios.csv"; // Caminho para o arquivo CSV dos funcionários
 
@@ -34,7 +35,7 @@ public class LoginControle extends AnchorPane{
     @FXML
     void usuarioLogin(ActionEvent event) throws IOException {
         App app = new App(); // Cria um novo objeto App
-        this.csv = new Csv(this.FUNCIONARIOS_CSV); // Inicializa o objeto CSV
+        Csv csv = new Csv(this.FUNCIONARIOS_CSV); // Inicializa o objeto CSV
 
         String enteredUsername = username.getText().trim().toLowerCase(); // Obtém o nome de usuário inserido
         String enteredPassword = password.getText().trim(); // Obtém a senha inserida
@@ -46,7 +47,7 @@ public class LoginControle extends AnchorPane{
             return; // Sai do método se os campos estiverem vazios
         }
     
-        List<List<String>> content = this.csv.carregaCSV(); // Carrega os registros do arquivo CSV
+        List<List<String>> content = csv.carregaCSV(); // Carrega os registros do arquivo CSV
     
         boolean loggedIn = false;
         for (List<String> c : content) {

@@ -1,3 +1,4 @@
+package Controles;
 import java.io.IOException;
 import java.util.List;
 
@@ -189,7 +190,7 @@ class ProdutoControle extends AnchorPane {
             }
         }
     }
-    
+
     @FXML
     void clickProdutosRemover(ActionEvent event) {
 
