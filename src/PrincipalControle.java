@@ -28,16 +28,14 @@ public class PrincipalControle {
 
     @FXML
     private Text funcionarioNome;
-    
-    private Funcionario funcionario;
 
+    private Funcionario funcionario;
 
     @FXML
     void clickClientes(ActionEvent event) {
         AnchorPane clientes = new ClienteControle(this.funcionario);
         painelBranco.setCenter(clientes);
     }
-
 
     @FXML
     void clickVendas(ActionEvent event) {
@@ -51,21 +49,17 @@ public class PrincipalControle {
         painelBranco.setCenter(produtos);
     }
 
-
     @FXML
     void clickNovaVenda(ActionEvent event) {
         AnchorPane novaVenda = new NovaVendaControle(this.funcionario);
         painelBranco.setCenter(novaVenda);
     }
 
-
     @FXML
     void clickSair(ActionEvent event) {
-            Stage stage = (Stage) btnSair.getScene().getWindow();
-            stage.close();
+        Stage stage = (Stage) btnSair.getScene().getWindow();
+        stage.close();
     }
-
-
 
     public void setFuncionario(Funcionario funcionario) {
         this.funcionario = funcionario;
@@ -73,5 +67,3 @@ public class PrincipalControle {
     }
 
 }
-
-

@@ -28,11 +28,13 @@ public class LoginControle extends AnchorPane{
     private Funcionario funcionario;
     private Csv csv;
 
+    private final String FUNCIONARIOS_CSV = "src\\dados\\funcionarios.csv";
+
 
     @FXML
     void usuarioLogin(ActionEvent event) throws IOException {
         App app = new App();
-        this.csv = new Csv("src\\dados\\funcionarios.csv");
+        this.csv = new Csv(this.FUNCIONARIOS_CSV);
 
         String enteredUsername = username.getText().trim().toLowerCase();
         String enteredPassword = password.getText().trim();
@@ -40,7 +42,8 @@ public class LoginControle extends AnchorPane{
         // Check for empty fields
         if (enteredUsername.isEmpty() || enteredPassword.isEmpty()) {
             wrongLogin.setText("Preencha todos os campos.");
-            app.mostrarErro("Erro Login", "Preencha todos os campos.");
+            // app.mostrarErro("Erro Login", "Preencha todos os campos.");
+            Erro.mostrarErro("Error login",Erro.EMPTY_FIELDS);
             return; // Exit the method if fields are empty
         }
     
@@ -65,7 +68,7 @@ public class LoginControle extends AnchorPane{
             app.trocarCena("cenas/PrincipalCena.fxml", this.funcionario);
         } else {
             wrongLogin.setText("Senha ou Usuário errado!");
-            app.mostrarErro("Erro Login", "Senha ou Usuário errado!");
+            Erro.mostrarErro("Erro Login", "Senha ou Usuário errado!");
         }
     }
     

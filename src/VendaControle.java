@@ -23,7 +23,11 @@ import modelos.Funcionario;
 import modelos.Produto;
 import modelos.Venda;
 
-public class VendaControle extends AnchorPane{
+public class VendaControle extends AnchorPane {
+
+    private String VENDA_CENA = "cenas/VendaCena.fxml";
+    private String VENDAS_CSV = "src\\dados\\vendas.csv";
+    private String PRODUTOS_CSV = "src\\dados\\produtos.csv";
 
     @FXML
     private TableColumn<Venda, String> ColData;
@@ -34,7 +38,6 @@ public class VendaControle extends AnchorPane{
     @FXML
     private TableColumn<Venda, Double> ColPreco;
 
-    
     @FXML
     private TableColumn<Venda, Integer> colClienteId;
 
@@ -80,16 +83,15 @@ public class VendaControle extends AnchorPane{
     private Funcionario funcionario;
     private Csv csv;
 
-
-     public VendaControle(Funcionario funcionarioArg){
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("cenas/VendaCena.fxml"));
+    public VendaControle(Funcionario funcionarioArg) {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(VENDA_CENA));
 
         fxmlLoader.setRoot(this);
         fxmlLoader.setController(this);
 
         try {
             fxmlLoader.load();
-            this.csv = new Csv("src\\dados\\vendas.csv");
+            this.csv = new Csv(VENDAS_CSV);
             this.funcionario = funcionarioArg;
 
             this.mostrarVendasTabela();
@@ -98,36 +100,26 @@ public class VendaControle extends AnchorPane{
         }
     }
 
-    public ObservableList<Venda> carregarVendas(){
+    public ObservableList<Venda> carregarVendas() {
         ObservableList<Venda> listVendas = FXCollections.observableArrayList();
 
-        try{
+        try {
             List<List<String>> records = csv.carregaCSV();
-            for(List<String> rs: records){
+            for (List<String> rs : records) {
 
-
-                Venda venda = new Venda(
-                    Integer.parseInt(rs.get(0)),
-                    Double.parseDouble(rs.get(1)), 
-                    rs.get(2), 
-
-                    rs.get(3), 
-                    Integer.parseInt(rs.get(4)), 
-                    Integer.parseInt(rs.get(5))
-                );
-
-
+                Venda venda = new Venda(Integer.parseInt(rs.get(0)), Double.parseDouble(rs.get(1)), rs.get(2),
+                        rs.get(3), Integer.parseInt(rs.get(4)), Integer.parseInt(rs.get(5)));
                 listVendas.add(venda);
             }
-        }catch(Exception ex){
+        } catch (Exception ex) {
+            Erro.mostrarErro("Erro venda.", "Erro ao carregar dados para a tabela.");
             System.err.println(ex);
         }
 
         return listVendas;
     }
 
-
-    public void mostrarVendasTabela(){
+    public void mostrarVendasTabela() {
         ObservableList<Venda> lista = this.carregarVendas();
 
         this.ColId.setCellValueFactory(new PropertyValueFactory<Venda, Integer>("id"));
@@ -140,87 +132,82 @@ public class VendaControle extends AnchorPane{
         this.tabelaVendas.setItems(lista);
     }
 
-
     @FXML
     void clickVendasAdicionar(ActionEvent event) {
         int vendaSelectionado = Integer.parseInt(this.entradaVendaId.getText());
-        App app = new App();
 
         // Remove o venda selecionado do arquivo CSV
         try {
             csv.removePorId(vendaSelectionado);
         } catch (IOException e) {
-            app.mostrarErro("Erro ao editar venda.", "");
+            Erro.mostrarErro("Erro venda.", "Erro ao tentar remover venda selecionada.");
             e.printStackTrace();
             return;
         }
 
-        // // Atualiza o arquivo CSV com os novos dados do venda
+        // Atualiza o arquivo CSV com os novos dados do venda
         String precoText = this.entradaVendaPreco.getText();
         String produtoIdText = this.entradaVendaProdutoId.getText();
         String clientIdText = this.entradaVendaClienteId.getText();
-        // String funcionarioIdText = this.entradaVendaFuncionarioId.getText();
-        this.entradaVendaFuncionarioId.setText(String.valueOf(this.funcionario.getId()));
         String dataText = this.entradaVendaData.getValue().toString();
+        this.entradaVendaFuncionarioId.setText(String.valueOf(this.funcionario.getId()));
 
-        if (!precoText.trim().isEmpty() && 
-            !produtoIdText.trim().isEmpty() && 
-            !clientIdText.trim().isEmpty() && 
-            !dataText.trim().isEmpty()
-            ) {
-            
-                try {
-                int ultimoID = csv.getLastID();
+        if (precoText.trim().isEmpty() && produtoIdText.trim().isEmpty() && clientIdText.trim().isEmpty()
+                && dataText.trim().isEmpty()) {
+            Erro.mostrarErro("Erro Venda", "Por favor, preencha todos os campos.");
+        }
 
-                Venda vendaAtualizado = new Venda(
-                        ultimoID+1, 
-                        Double.parseDouble(precoText),
-                        dataText,
-                        produtoIdText,
-                        Integer.parseInt(clientIdText),
-                        0//Integer.parseInt(funcionarioIdText)
-                    );
-                csv.adicionar(vendaAtualizado.toString());
-                this.mostrarVendasTabela();
-            } catch (IOException e) {
-                app.mostrarErro("Erro ao editar venda.", "");
-                e.printStackTrace();
-            } catch (NumberFormatException e) {
-                app.mostrarErro("Erro Venda", "Por favor, insira valores numéricos válidos para preço e quantidade.");
-                e.printStackTrace();
-            }
+        try {
+            int ultimoID = csv.getLastID();
+
+            Venda vendaAtualizado = new Venda(
+                    ultimoID + 1,
+                    Double.parseDouble(precoText),
+                    dataText,
+                    produtoIdText,
+                    Integer.parseInt(clientIdText),
+                    0// Integer.parseInt(funcionarioIdText)
+            );
+            csv.adicionar(vendaAtualizado.toString());
+            this.mostrarVendasTabela();
+        } catch (IOException e) {
+            Erro.mostrarErro("Erro ao editar venda.", "");
+            e.printStackTrace();
+        } catch (NumberFormatException e) {
+            Erro.mostrarErro("Erro Venda",
+                    "Por favor, insira valores numéricos válidos para preço e quantidade.");
+            e.printStackTrace();
         }
 
     }
 
-        
     @FXML
     void clickTabela(MouseEvent event) {
 
         Venda selecionadoVenda = tabelaVendas.getSelectionModel().getSelectedItem();
         if (selecionadoVenda != null) {
 
-                this.entradaVendaId.setText(String.valueOf(selecionadoVenda.getId()));
-                this.entradaVendaPreco.setText(String.valueOf(selecionadoVenda.getPreco()));
-                this.entradaVendaProdutoId.setText(String.valueOf(selecionadoVenda.getProdutoId()));
-                this.entradaVendaClienteId.setText(String.valueOf(selecionadoVenda.getClienteId()));
-                this.entradaVendaFuncionarioId.setText(String.valueOf(selecionadoVenda.getFuncionarioId()));
-                this.entradaVendaData.setValue(LocalDate.parse(selecionadoVenda.getData(), DateTimeFormatter.ofPattern("dd-MM-yyyy")));
-
-        } else {}
+            this.entradaVendaId.setText(String.valueOf(selecionadoVenda.getId()));
+            this.entradaVendaPreco.setText(String.valueOf(selecionadoVenda.getPreco()));
+            this.entradaVendaProdutoId.setText(String.valueOf(selecionadoVenda.getProdutoId()));
+            this.entradaVendaClienteId.setText(String.valueOf(selecionadoVenda.getClienteId()));
+            this.entradaVendaFuncionarioId.setText(String.valueOf(selecionadoVenda.getFuncionarioId()));
+            this.entradaVendaData
+                    .setValue(LocalDate.parse(selecionadoVenda.getData(), DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+        } else {
+        }
     }
 
     @FXML
     void clickVendasEditar(ActionEvent event) {
-        int produtoSelectionado = Integer.parseInt(this.entradaVendaId.getText());
-        App app = new App();
+        int vendaSelectionado = Integer.parseInt(this.entradaVendaId.getText());
 
         // Remove o produto selecionado do arquivo CSV
-        Csv csvProduto = new Csv("src\\dados\\produtos.csv");
+        Csv csvVenda = new Csv(PRODUTOS_CSV);
         try {
-            csvProduto.removePorId(produtoSelectionado);
+            csvVenda.removePorId(vendaSelectionado);
         } catch (IOException e) {
-            app.mostrarErro("Erro ao editar produto.", "");
+            Erro.mostrarErro("Erro venda.", "Erro ao tentar editar a venda selecionado");
             e.printStackTrace();
             return;
         }
@@ -232,16 +219,14 @@ public class VendaControle extends AnchorPane{
 
         if (!precoText.trim().isEmpty() && !quantText.trim().isEmpty()) {
             try {
-                Produto produtoAtualizado = new Produto(produtoSelectionado, this.entradaVendaId.getText(),
-                        Double.parseDouble(precoText), Integer.parseInt(quantText),
-                        this.entradaVendaFuncionarioId.getText());
-                        csvProduto.adicionar(produtoAtualizado.toString());
+                Produto produtoAtualizado = new Produto(vendaSelectionado, this.entradaVendaId.getText(),Double.parseDouble(precoText), Integer.parseInt(quantText),this.entradaVendaFuncionarioId.getText());
+                csvVenda.adicionar(produtoAtualizado.toString());
                 this.mostrarVendasTabela();
             } catch (IOException e) {
-                app.mostrarErro("Erro ao editar produto.", "");
+                Erro.mostrarErro("Erro Venda.", "Erro ao tentar editar venda.");
                 e.printStackTrace();
             } catch (NumberFormatException e) {
-                app.mostrarErro("Erro Produto", "Por favor, insira valores numéricos válidos para preço e quantidade.");
+                Erro.mostrarErro("Erro Venda","Por favor, insira valores numéricos válidos para preço e quantidade.");
                 e.printStackTrace();
             }
         }
@@ -249,7 +234,6 @@ public class VendaControle extends AnchorPane{
 
     @FXML
     void clickVendasRemover(ActionEvent event) {
-        App app = new App();
 
         Venda vendaSelecionada = this.tabelaVendas.getSelectionModel().getSelectedItem();
         if (vendaSelecionada != null) {
@@ -257,21 +241,24 @@ public class VendaControle extends AnchorPane{
                 csv.removePorId(vendaSelecionada.getId());
                 mostrarVendasTabela();
             } catch (IOException e) {
-                app.mostrarErro("Erro ao remover venda.", "");
+                Erro.mostrarErro("Erro Venda.", "Erro ao tentar remover venda.");
                 e.printStackTrace();
             }
-        } else {}
-    
-    }
+        } else {
+            Erro.mostrarErro("Erro Venda.", "Por favor, selecione a venda a ser removida.");
+            return;
+        }
 
-    
+    }
 
     @FXML
     void pesquisaEntradaMudou(KeyEvent event) {
         String search = this.vendaPesquisaEntrada.getText().toLowerCase();
         ObservableList<Venda> filteredList = FXCollections.observableArrayList();
- 
-        if (search.isEmpty() || event.getCode() == KeyCode.BACK_SPACE){mostrarVendasTabela();}
+
+        if (search.isEmpty() || event.getCode() == KeyCode.BACK_SPACE) {
+            mostrarVendasTabela();
+        }
 
         for (Venda item : tabelaVendas.getItems()) {
             if (pesquisaAlgo(item, search)) {
@@ -281,17 +268,16 @@ public class VendaControle extends AnchorPane{
         tabelaVendas.setItems(filteredList);
     }
 
-
     private boolean pesquisaAlgo(Venda item, String searchText) {
         searchText = searchText.toLowerCase();
-    
+
         if (item.getData().contains(searchText)) {
             return true;
         }
         if (String.valueOf(item.getId()).contains(searchText)) {
             return true;
         }
-    
+
         if (String.valueOf(item.getPreco()).contains(searchText)) {
             return true;
         }
@@ -308,9 +294,6 @@ public class VendaControle extends AnchorPane{
             return true;
         }
 
-    
         return false;
     }
 }
-
-    

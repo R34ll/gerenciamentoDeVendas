@@ -20,6 +20,9 @@ import modelos.Produto;
 
 class ProdutoControle extends AnchorPane {
 
+    private static String PRODUTO_CENA = "cenas/ProdutoCena.fxml";
+    private static String PRODUTOS_CSV = "src\\dados\\produtos.csv";
+
     @FXML
     private Button btnProdutosAdicionar;
 
@@ -68,14 +71,14 @@ class ProdutoControle extends AnchorPane {
     private Csv csv;
 
     public ProdutoControle() {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("cenas/ProdutoCena.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(PRODUTO_CENA));
 
         fxmlLoader.setRoot(this);
         fxmlLoader.setController(this);
 
         try {
             fxmlLoader.load();
-            this.csv = new Csv("src\\dados\\produtos.csv");
+            this.csv = new Csv(PRODUTOS_CSV);
 
             this.mostrarProdutosTabela();
         } catch (Exception e) {
@@ -94,6 +97,7 @@ class ProdutoControle extends AnchorPane {
                 listProdutos.add(produto);
             }
         } catch (Exception ex) {
+            Erro.mostrarErro("Erro Produto.", "Erro ao tentar carregar dados dos produtos");
             System.err.println(ex);
         }
 
@@ -114,35 +118,28 @@ class ProdutoControle extends AnchorPane {
 
     @FXML
     void clickProdutosAdicionar(ActionEvent event) {
-        App app = new App();
 
         String precoText = this.entradaProdutoPreco.getText();
         String quantText = this.entradaProdutoQuant.getText();
 
-        // Check if the text fields are empty or contain only whitespace
+        // TODO: Check if the text fields are empty or contain only whitespace
         if (precoText.trim().isEmpty() || quantText.trim().isEmpty()) {
-            app.mostrarErro("Erro Produto", "Por favor, preencha os campos de preço e quantidade.");
+            Erro.mostrarErro("Erro Produto", "Por favor, preencha os campos de preço e quantidade.");
             return; // Exit the method early to prevent further execution
         }
 
         try {
             int ultimoID = csv.getLastID();
-
-            Produto produto = new Produto(
-                    ultimoID + 1,
-                    this.entradaProdutoNome.getText(),
-                    Double.parseDouble(precoText),
-                    Integer.parseInt(quantText),
-                    this.entradaProdutoDescricao.getText());
+            Produto produto = new Produto(ultimoID + 1, this.entradaProdutoNome.getText(), Double.parseDouble(precoText), Integer.parseInt(quantText), this.entradaProdutoDescricao.getText());
 
             csv.adicionar(produto.toString());
             this.mostrarProdutosTabela();
 
         } catch (IOException e) {
-            app.mostrarErro("Erro Produto", "Um erro ocorreu ao adicionar novo Produto!");
+            Erro.mostrarErro("Erro Produto", "Um erro ocorreu ao adicionar novo Produto!");
             e.printStackTrace();
         } catch (NumberFormatException e) {
-            app.mostrarErro("Erro Produto", "Por favor, insira valores numéricos válidos para preço e quantidade.");
+            Erro.mostrarErro("Erro Produto", "Por favor, insira valores numéricos válidos para preço e quantidade.");
             e.printStackTrace();
         }
     }
@@ -157,21 +154,18 @@ class ProdutoControle extends AnchorPane {
             this.entradaProdutoQuant.setText(String.valueOf(selecionadoProduto.getQuant()));
             this.entradaProdutoDescricao.setText(selecionadoProduto.getDescricao());
             this.entradaProdutoId.setText(String.valueOf(selecionadoProduto.getId()));
-        } else {
-        }
+        } else {}
     }
 
     @FXML
     void clickProdutosEditar(ActionEvent event) {
-
         int produtoSelectionado = Integer.parseInt(this.entradaProdutoId.getText());
-        App app = new App();
 
         // Remove o produto selecionado do arquivo CSV
         try {
             csv.removePorId(produtoSelectionado);
         } catch (IOException e) {
-            app.mostrarErro("Erro ao editar produto.", "");
+            Erro.mostrarErro("Erro produto.", "Erro interno ao tentar editar produto.");
             e.printStackTrace();
             return;
         }
@@ -181,14 +175,16 @@ class ProdutoControle extends AnchorPane {
         String quantText = this.entradaProdutoQuant.getText();
         if (!precoText.trim().isEmpty() && !quantText.trim().isEmpty()) {
             try {
-                Produto produtoAtualizado = new Produto(produtoSelectionado, this.entradaProdutoNome.getText(),Double.parseDouble(precoText), Integer.parseInt(quantText),this.entradaProdutoDescricao.getText());
+                Produto produtoAtualizado = new Produto(produtoSelectionado, this.entradaProdutoNome.getText(),
+                        Double.parseDouble(precoText), Integer.parseInt(quantText),
+                        this.entradaProdutoDescricao.getText());
                 csv.adicionar(produtoAtualizado.toString());
                 this.mostrarProdutosTabela();
             } catch (IOException e) {
-                app.mostrarErro("Erro ao editar produto.", "");
+                Erro.mostrarErro("Erro ao editar produto.", "");
                 e.printStackTrace();
             } catch (NumberFormatException e) {
-                app.mostrarErro("Erro Produto", "Por favor, insira valores numéricos válidos para preço e quantidade.");
+                Erro.mostrarErro("Erro Produto", "Por favor, insira valores numéricos válidos para preço e quantidade.");
                 e.printStackTrace();
             }
         }
@@ -196,7 +192,6 @@ class ProdutoControle extends AnchorPane {
 
     @FXML
     void clickProdutosRemover(ActionEvent event) {
-        App app = new App();
 
         Produto produtoSelecionado = tabelaProdutos.getSelectionModel().getSelectedItem();
         if (produtoSelecionado != null) {
@@ -204,10 +199,12 @@ class ProdutoControle extends AnchorPane {
                 csv.removePorId(produtoSelecionado.getId());
                 mostrarProdutosTabela();
             } catch (IOException e) {
-                app.mostrarErro("Erro ao remover produto.", "");
+                Erro.mostrarErro("Erro ao remover produto.", "");
                 e.printStackTrace();
             }
         } else {
+            Erro.mostrarErro("Erro produto.", "Por Favor, selecione o produto a ser removido");
+            return;
         }
 
     }

@@ -18,7 +18,7 @@ import modelos.Funcionario;
 import modelos.Produto;
 import modelos.Venda;
 
-public class NovaVendaControle extends AnchorPane{
+public class NovaVendaControle extends AnchorPane {
 
     @FXML
     private Button btnVendasAdicionar;
@@ -52,10 +52,10 @@ public class NovaVendaControle extends AnchorPane{
 
     @FXML
     private TableView<Cliente> tabelaClientes;
-    
+
     private Funcionario funcionario;
 
-    public NovaVendaControle(Funcionario funcionarioArg){
+    public NovaVendaControle(Funcionario funcionarioArg) {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("cenas/NovaVendaCena.fxml"));
 
         fxmlLoader.setRoot(this);
@@ -63,7 +63,7 @@ public class NovaVendaControle extends AnchorPane{
 
         try {
             fxmlLoader.load();
-            this.funcionario =funcionarioArg;
+            this.funcionario = funcionarioArg;
             this.mostrarTabelas();
             ;
         } catch (Exception e) {
@@ -71,7 +71,7 @@ public class NovaVendaControle extends AnchorPane{
         }
     }
 
-    public void mostrarTabelas(){
+    public void mostrarTabelas() {
         this.tabelaProdutos.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
         ProdutoControle pc = new ProdutoControle();
@@ -79,7 +79,6 @@ public class NovaVendaControle extends AnchorPane{
 
         ObservableList<Produto> listaProdutos = pc.carregarProdutos();
         ObservableList<Cliente> listaCliente = cc.carregarclientes();
-
 
         this.colIdProduto.setCellValueFactory(new PropertyValueFactory<Produto, Integer>("id"));
         this.colPreco.setCellValueFactory(new PropertyValueFactory<Produto, Double>("preco"));
@@ -101,42 +100,42 @@ public class NovaVendaControle extends AnchorPane{
 
         }
 
-
-
-        App app = new App();
+        // App app = new App();
 
         if (!produtoSelecionado.isEmpty() && (selecionadoCliente != null)) {
             String produtosId = "";
-            for(Produto p: produtoSelecionado){
+            for (Produto p : produtoSelecionado) {
                 int quant = p.getQuant();
-                if (quant <= 0){
-                    app.mostrarErro("Erro Venda", "Produto não existe no estoque!");
+                if (quant <= 0) {
+                    Erro.mostrarErro("Erro Venda", "Produto não existe no estoque!");
                     return;
                 }
 
-                p.setQuant(quant-1);
-                produtosId+=p.getId()+"-";
+                p.setQuant(quant - 1);
+                produtosId += p.getId() + "-";
 
                 try {
                     p.update();
                 } catch (Exception e) {
-                    app.mostrarErro("Erro Venda", "Erro ao editar produto.");
+                    Erro.mostrarErro("Erro Venda", "Erro ao editar produto.");
                 }
 
             }
 
-            produtosId =  produtosId.substring(0, produtosId.length()-1);
-            Venda venda = new Venda(0, Double.parseDouble(this.entradaProdutoPreco.getText()), LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")).toString(), produtosId, selecionadoCliente.getId(), this.funcionario.getId());
+            produtosId = produtosId.substring(0, produtosId.length() - 1);
+            Venda venda = new Venda(0, Double.parseDouble(this.entradaProdutoPreco.getText()),
+                    LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")).toString(), produtosId,
+                    selecionadoCliente.getId(), this.funcionario.getId());
 
             try {
-                venda.setId(venda.getLastId()+1);
+                venda.setId(venda.getLastId() + 1);
                 venda.salvar();
-                
-            } catch (Exception e) {}
 
+            } catch (Exception e) {
+            }
 
-        }else{
-            app.mostrarErro("Erro Venda", "Selecione o Cliente e o(s) produto(s).");
+        } else {
+            Erro.mostrarErro("Erro Venda", "Selecione o Cliente e o(s) produto(s).");
         }
     }
 
@@ -146,8 +145,8 @@ public class NovaVendaControle extends AnchorPane{
 
         if (!produtoSelecionado.isEmpty()) {
             double preco_total = 0.0;
-            for(Produto p: produtoSelecionado){
-                preco_total+=p.getPreco();
+            for (Produto p : produtoSelecionado) {
+                preco_total += p.getPreco();
             }
 
             this.entradaProdutoPreco.setText(String.valueOf(preco_total));
