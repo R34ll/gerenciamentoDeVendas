@@ -14,71 +14,70 @@ import modelos.Funcionario;
 public class LoginControle extends AnchorPane{ 
 
     @FXML
-    private Button button;
+    private Button button; // Botão para realizar o login
 
     @FXML
-    private PasswordField password;
+    private PasswordField password; // Campo de texto para a senha do usuário
 
     @FXML
-    private TextField username;
+    private TextField username; // Campo de texto para o nome de usuário
 
     @FXML
-    private Label wrongLogin;   
+    private Label wrongLogin;   // Rótulo para exibir mensagens de erro de login
 
-    private Funcionario funcionario;
-    private Csv csv;
+    private Funcionario funcionario; // Objeto para armazenar o funcionário logado
+    private Csv csv; // Objeto para manipulação do arquivo CSV
 
-    private final String FUNCIONARIOS_CSV = "src\\dados\\funcionarios.csv";
+    private final String FUNCIONARIOS_CSV = "src\\dados\\funcionarios.csv"; // Caminho para o arquivo CSV dos funcionários
 
 
     @FXML
     void usuarioLogin(ActionEvent event) throws IOException {
-        App app = new App();
-        this.csv = new Csv(this.FUNCIONARIOS_CSV);
+        App app = new App(); // Cria um novo objeto App
+        this.csv = new Csv(this.FUNCIONARIOS_CSV); // Inicializa o objeto CSV
 
-        String enteredUsername = username.getText().trim().toLowerCase();
-        String enteredPassword = password.getText().trim();
+        String enteredUsername = username.getText().trim().toLowerCase(); // Obtém o nome de usuário inserido
+        String enteredPassword = password.getText().trim(); // Obtém a senha inserida
     
-        // Check for empty fields
+        // Verifica se os campos estão vazios
         if (enteredUsername.isEmpty() || enteredPassword.isEmpty()) {
-            wrongLogin.setText("Preencha todos os campos.");
-            // app.mostrarErro("Erro Login", "Preencha todos os campos.");
-            Erro.mostrarErro("Error login",Erro.EMPTY_FIELDS);
-            return; // Exit the method if fields are empty
+            wrongLogin.setText("Preencha todos os campos."); // Exibe uma mensagem de erro
+            Erro.mostrarErro("Error login",Erro.EMPTY_FIELDS); // Exibe uma mensagem de erro
+            return; // Sai do método se os campos estiverem vazios
         }
     
-        List<List<String>> content = this.csv.carregaCSV();
+        List<List<String>> content = this.csv.carregaCSV(); // Carrega os registros do arquivo CSV
     
         boolean loggedIn = false;
         for (List<String> c : content) {
-            String nome = c.get(1).toLowerCase();
-            String senha = c.get(4);
-
-
+            String nome = c.get(1).toLowerCase(); // Obtém o nome do funcionário
+            String senha = c.get(4); // Obtém a senha do funcionário
     
+            // Verifica se o nome de usuário e a senha inseridos correspondem a um funcionário
             if (enteredUsername.equals(nome) && enteredPassword.equals(senha)) {
-                loggedIn = true;
-                this.funcionario = new Funcionario(Integer.parseInt(c.get(0)), nome,c.get(2), c.get(3), senha);
-                break; // Exit the loop once successful login is found
+                loggedIn = true; // Define loggedIn como verdadeiro
+                this.funcionario = new Funcionario(Integer.parseInt(c.get(0)), nome,c.get(2), c.get(3), senha); // Cria um novo objeto Funcionario
+                break; // Sai do loop se o login for bem-sucedido
             }
         }
     
+        // Verifica se o login foi bem-sucedido
         if (loggedIn) {
-            wrongLogin.setText("Sucesso!");
-            app.trocarCena("cenas/PrincipalCena.fxml", this.funcionario);
+            wrongLogin.setText("Sucesso!"); // Exibe uma mensagem de sucesso
+            app.trocarCena("cenas/PrincipalCena.fxml", this.funcionario); // Troca a cena para a cena principal
         } else {
-            wrongLogin.setText("Senha ou Usuário errado!");
-            Erro.mostrarErro("Erro Login", "Senha ou Usuário errado!");
+            wrongLogin.setText("Senha ou Usuário errado!"); // Exibe uma mensagem de erro
+            Erro.mostrarErro("Erro Login", "Senha ou Usuário errado!"); // Exibe uma mensagem de erro
         }
     }
     
     
     public Funcionario getFuncionario() {
-        return funcionario;
+        return funcionario; // Retorna o funcionário logado
     }
 
     public void setFuncionario(Funcionario funcionario) {
-        this.funcionario = funcionario;
+        this.funcionario = funcionario; // Define o funcionário logado
     }
 
 }
