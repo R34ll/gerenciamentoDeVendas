@@ -92,6 +92,8 @@ public class VendaControle extends AnchorPane {
             fxmlLoader.load(); // Carrega a cena de venda
             this.csv = new Csv(VENDAS_CSV); // Inicializa o objeto CSV
             this.funcionario = funcionarioArg; // Armazena o funcionário logado
+            this.entradaVendaFuncionarioId.setText(String.valueOf(this.funcionario.getId())); // Define o texto do campo ID do Funcionário com o ID do funcionário logado
+
 
             this.mostrarVendasTabela(); // Mostra as vendas na tabela
         } catch (Exception e) {
@@ -131,54 +133,7 @@ public class VendaControle extends AnchorPane {
         this.tabelaVendas.setItems(lista); // Define a lista de vendas a ser exibida na tabela
     }
 
-    @FXML
-    void clickVendasAdicionar(ActionEvent event) {
-        int vendaSelectionado = Integer.parseInt(this.entradaVendaId.getText()); // Obtém o ID da venda selecionada
-
-        // Remove a venda selecionada do arquivo CSV
-        try {
-            csv.removePorId(vendaSelectionado);
-        } catch (IOException e) {
-            Erro.mostrarErro("Erro venda.", "Erro ao tentar remover venda selecionada.");
-            e.printStackTrace();
-            return;
-        }
-
-        // Atualiza o arquivo CSV com os novos dados da venda
-        String precoText = this.entradaVendaPreco.getText(); // Obtém o texto do campo Preço
-        String produtoIdText = this.entradaVendaProdutoId.getText(); // Obtém o texto do campo ID do Produto
-        String clientIdText = this.entradaVendaClienteId.getText(); // Obtém o texto do campo ID do Cliente
-        String dataText = this.entradaVendaData.getValue().toString(); // Obtém o texto do campo Data
-        this.entradaVendaFuncionarioId.setText(String.valueOf(this.funcionario.getId())); // Define o texto do campo ID do Funcionário com o ID do funcionário logado
-
-        if (precoText.trim().isEmpty() && produtoIdText.trim().isEmpty() && clientIdText.trim().isEmpty()
-                && dataText.trim().isEmpty()) {
-            Erro.mostrarErro("Erro Venda", "Por favor, preencha todos os campos.");
-        }
-
-        try {
-            int ultimoID = csv.getLastID(); // Obtém o último ID do arquivo CSV
-
-            Venda vendaAtualizado = new Venda(
-                    ultimoID + 1,
-                    Double.parseDouble(precoText),
-                    dataText,
-                    produtoIdText,
-                    Integer.parseInt(clientIdText),
-                    0// Integer.parseInt(funcionarioIdText)
-            );
-            csv.adicionar(vendaAtualizado.toString()); // Adiciona a venda atualizada ao arquivo CSV
-            this.mostrarVendasTabela(); // Atualiza a tabela de vendas
-        } catch (IOException e) {
-            Erro.mostrarErro("Erro ao editar venda.", "");
-            e.printStackTrace();
-        } catch (NumberFormatException e) {
-            Erro.mostrarErro("Erro Venda",
-                    "Por favor, insira valores numéricos válidos para preço e quantidade.");
-            e.printStackTrace();
-        }
-
-    }
+    
     @FXML
     void clickTabela(MouseEvent event) {
 
@@ -190,14 +145,66 @@ public class VendaControle extends AnchorPane {
             this.entradaVendaProdutoId.setText(String.valueOf(selecionadoVenda.getProdutoId()));
             this.entradaVendaClienteId.setText(String.valueOf(selecionadoVenda.getClienteId()));
             this.entradaVendaFuncionarioId.setText(String.valueOf(selecionadoVenda.getFuncionarioId()));
-            this.entradaVendaData
-                    .setValue(LocalDate.parse(selecionadoVenda.getData(), DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+            this.entradaVendaData.setValue(LocalDate.parse(selecionadoVenda.getData(), DateTimeFormatter.ofPattern("dd-MM-yyyy")));
         } else {
         }
     }
 
 
     
+
+    @FXML
+    void clickVendasAdicionar(ActionEvent event) {
+
+        // Atualiza o arquivo CSV com os novos dados da venda
+        // String idVendaText = this.entradaVendaId.getText();
+        String precoText = this.entradaVendaPreco.getText(); // Obtém o texto do campo Preço
+        String produtoIdText = this.entradaVendaProdutoId.getText(); // Obtém o texto do campo ID do Produto
+        String clientIdText = this.entradaVendaClienteId.getText(); // Obtém o texto do campo ID do Cliente
+        String dataText = null; // Obtém o texto do campo Data
+        // this.entradaVendaFuncionarioId.setText(String.valueOf(this.funcionario.getId())); // Define o texto do campo ID do Funcionário com o ID do funcionário logado
+
+
+        if (this.entradaVendaData.getValue() != null) {
+            dataText = this.entradaVendaData.getValue().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+        }
+
+
+
+        // System.out.println(idVendaText);
+        // if (idVendaText != null){
+        //     Erro.mostrarErro("Erro Venda", "Id de venda já cadastrado.");
+        //     return;
+        // }
+
+        if (precoText.trim().isEmpty() || produtoIdText.trim().isEmpty() || clientIdText.trim().isEmpty() || dataText == null || dataText.trim().isEmpty()) {
+            Erro.mostrarErro("Erro Venda", "Por favor, preencha todos os campos.");
+            return;
+        }
+
+
+        try {
+            int ultimoID = csv.getLastID(); // Obtém o último ID do arquivo CSV
+
+            Venda vendaAtualizado = new Venda(
+                    ultimoID + 1,
+                    Double.parseDouble(precoText.trim()),
+                    dataText,
+                    produtoIdText,
+                    Integer.parseInt(clientIdText.trim()),
+                    this.funcionario.getId()// Integer.parseInt(funcionarioIdText) // TODO: Adicionar id do funcionario
+            );
+            csv.adicionar(vendaAtualizado.toString()); // Adiciona a venda atualizada ao arquivo CSV
+            this.mostrarVendasTabela(); // Atualiza a tabela de vendas
+        } catch (IOException e) {
+            Erro.mostrarErro("Erro ao editar venda.", "");
+            e.printStackTrace();
+        } catch (NumberFormatException e) {
+            Erro.mostrarErro("Erro Venda","Por favor, insira valores numéricos válidos para preço e quantidade.");
+            e.printStackTrace();
+        }
+    }
+
 
     
     @FXML
@@ -214,11 +221,17 @@ public class VendaControle extends AnchorPane {
         }
 
         // Atualiza o arquivo CSV com os novos dados da venda
+        String idVendaText = this.entradaVendaId.getText();
         String precoText = this.entradaVendaPreco.getText(); // Obtém o texto do campo Preço
         String produtoIdText = this.entradaVendaProdutoId.getText(); // Obtém o texto do campo ID do Produto
         String clientIdText = this.entradaVendaClienteId.getText(); // Obtém o texto do campo ID do Cliente
-        String dataText = this.entradaVendaData.getValue().toString(); // Obtém o texto do campo Data
+        String dataText = null; // Obtém o texto do campo Data
         this.entradaVendaFuncionarioId.setText(String.valueOf(this.funcionario.getId())); // Define o texto do campo ID do Funcionário com o ID do funcionário logado
+
+        if (this.entradaVendaData.getValue() != null) {
+            dataText = this.entradaVendaData.getValue().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+        }
+
 
         if (precoText.trim().isEmpty() && produtoIdText.trim().isEmpty() && clientIdText.trim().isEmpty()
                 && dataText.trim().isEmpty()) {
@@ -226,10 +239,9 @@ public class VendaControle extends AnchorPane {
         }
 
         try {
-            int ultimoID = csv.getLastID(); // Obtém o último ID do arquivo CSV
 
             Venda vendaAtualizado = new Venda(
-                    ultimoID + 1,
+                    Integer.parseInt(idVendaText),
                     Double.parseDouble(precoText),
                     dataText,
                     produtoIdText,

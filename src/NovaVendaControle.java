@@ -5,6 +5,8 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
@@ -85,7 +87,7 @@ public class NovaVendaControle extends AnchorPane {
 
         this.colIdCliente.setCellValueFactory(new PropertyValueFactory<Cliente, Integer>("id")); // Define a propriedade a ser exibida na coluna ID do cliente
         this.colNomeCliente.setCellValueFactory(new PropertyValueFactory<Cliente, String>("nome")); // Define a propriedade a ser exibida na coluna Nome do cliente
-        this.colUltimaCompra.setCellValueFactory(new PropertyValueFactory<Cliente, String>("ultima_compra")); // Define a propriedade a ser exibida na coluna Última Compra
+        this.colUltimaCompra.setCellValueFactory(new PropertyValueFactory<Cliente, String>("ultimaCompra")); // Define a propriedade a ser exibida na coluna Última Compra
 
         this.tabelaProdutos.setItems(listaProdutos); // Define a lista de produtos a ser exibida na tabela de produtos
         this.tabelaClientes.setItems(listaCliente); // Define a lista de clientes a ser exibida na tabela de clientes
@@ -125,11 +127,21 @@ public class NovaVendaControle extends AnchorPane {
                 venda.setId(venda.getLastId() + 1); // Define o ID da venda
                 venda.salvar(); // Salva a venda no arquivo CSV
 
+
+                Alert alert = new Alert(AlertType.INFORMATION); // Cria um novo alerta do tipo ERRO
+                alert.setTitle("Sucesso!"); // Define o título do alerta
+                alert.setHeaderText(null); // Define o cabeçalho do alerta (neste caso, sem cabeçalho)
+                alert.setContentText("Venda concluida com sucesso!"); // Define a mensagem do alerta
+                alert.showAndWait(); // Exibe o alerta e espera até que o usuário o feche
+
             } catch (Exception e) {
+                Erro.mostrarErro("Erro Venda", "Erro ao concluir venda."); // Exibe uma mensagem de erro
+                e.printStackTrace();
             }
 
         } else {
             Erro.mostrarErro("Erro Venda", "Selecione o Cliente e o(s) produto(s)."); // Exibe uma mensagem de erro
+            return;
         }
     }
 

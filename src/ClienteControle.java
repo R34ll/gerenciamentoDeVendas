@@ -115,7 +115,7 @@ public class ClienteControle extends AnchorPane {
         this.ColCPF.setCellValueFactory(new PropertyValueFactory<Cliente, String>("cpf")); // Define a propriedade a ser exibida na coluna CPF
         this.colTelefone.setCellValueFactory(new PropertyValueFactory<Cliente, Integer>("telefone")); // Define a propriedade a ser exibida na coluna Telefone
         this.colCadastro.setCellValueFactory(new PropertyValueFactory<Cliente, String>("cadastro")); // Define a propriedade a ser exibida na coluna Cadastro
-        this.colUltimaCompra.setCellValueFactory(new PropertyValueFactory<Cliente, String>("ultima_compra")); // Define a propriedade a ser exibida na coluna Última Compra
+        this.colUltimaCompra.setCellValueFactory(new PropertyValueFactory<Cliente, String>("ultimaCompra")); // Define a propriedade a ser exibida na coluna Última Compra
 
         this.tabelaClientes.setItems(lista); // Define a lista de clientes a ser exibida na tabela
     }
@@ -167,7 +167,8 @@ public class ClienteControle extends AnchorPane {
         }
         try {
             Cliente clienteAtualizado = new Cliente(clienteSelectionado.getId(), nomeText, cpfText, telText, clienteSelectionado.getCadastro(), clienteSelectionado.getUltimaCompra()); // Cria um novo objeto Cliente com os dados atualizados
-            clienteAtualizado.update(); // Atualiza o cliente no arquivo CSV
+            // clienteAtualizado.update(); // Atualiza o cliente no arquivo CSV
+            csv.adicionar(clienteAtualizado.toString());
             this.mostrarclientesTabela(); // Atualiza a tabela de clientes
         } catch (Exception e) {
             Erro.mostrarErro("Erro Cliente.", "Erro interno ao tentar editar Cliente.");
