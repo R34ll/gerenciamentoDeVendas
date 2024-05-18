@@ -2,7 +2,8 @@ package Controles;
 import java.io.IOException;
 import java.util.List;
 
-import dados.Csv;
+import Uteis.Csv;
+import Uteis.Erro;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;

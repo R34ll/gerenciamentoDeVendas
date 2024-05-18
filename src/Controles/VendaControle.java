@@ -4,7 +4,8 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-import dados.Csv;
+import Uteis.Csv;
+import Uteis.Erro;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -27,8 +28,6 @@ public class VendaControle extends AnchorPane {
 
     private String VENDA_CENA = "cenas/VendaCena.fxml"; // Caminho para o arquivo FXML da cena de venda
     private String VENDAS_CSV = "src\\dados\\vendas.csv"; // Caminho para o arquivo CSV das vendas
-    private String PRODUTOS_CSV = "src\\dados\\produtos.csv"; // Caminho para o arquivo CSV dos produtos
-
     @FXML
     private TableColumn<Venda, String> ColData; // Coluna para exibir a data da venda
 

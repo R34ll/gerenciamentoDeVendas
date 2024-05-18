@@ -2,8 +2,8 @@
 import java.io.IOException;
 import java.util.List;
 
-import Controles.Erro;
-import dados.Csv;
+import Uteis.Csv;
+import Uteis.Erro;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;

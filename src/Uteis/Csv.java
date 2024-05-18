@@ -1,4 +1,4 @@
-package dados;
+package Uteis;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
