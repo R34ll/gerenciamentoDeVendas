@@ -1,4 +1,4 @@
-package Controles;
+package controles;
 import java.io.IOException;
 import java.util.List;
 
@@ -20,9 +20,9 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import modelos.Produto;
 
-class ProdutoControle extends AnchorPane {
+public class ProdutoControle extends AnchorPane {
 
-    private static String PRODUTO_CENA = "cenas/ProdutoCena.fxml"; // Caminho para o arquivo FXML da cena do produto
+    private static String PRODUTO_CENA = "/cenas/ProdutoCena.fxml"; // Caminho para o arquivo FXML da cena do produto
     private static String PRODUTOS_CSV = "src\\dados\\produtos.csv"; // Caminho para o arquivo CSV dos produtos
 
     @FXML
@@ -69,6 +69,9 @@ class ProdutoControle extends AnchorPane {
 
     @FXML
     private TextField entradaProdutoId; // Campo de texto para entrada do ID do produto
+
+
+
 
     private Csv csv; // Objeto para manipulação do arquivo CSV
 
@@ -212,7 +215,7 @@ class ProdutoControle extends AnchorPane {
     }
 
     @FXML
-    void pesquisaEntradaMudou(KeyEvent event) {
+    public void pesquisaEntradaMudou(KeyEvent event) {
         String search = this.produtoPesquisaEntrada.getText().toLowerCase();
         ObservableList<Produto> filteredList = FXCollections.observableArrayList();
 

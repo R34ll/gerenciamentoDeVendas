@@ -10,7 +10,7 @@
 
 <fx:root prefHeight="600.0" prefWidth="650.0" style="-fx-background-color: white;" type="AnchorPane" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <TableView fx:id="tabelaProdutos" accessibleRoleDescription="Produtos" accessibleText="Produtos" focusTraversable="false" layoutX="13.0" layoutY="28.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#clickTabelaProduto" prefHeight="547.0" prefWidth="348.0">
+      <TableView fx:id="tabelaProdutos" accessibleRoleDescription="Produtos" accessibleText="Produtos" focusTraversable="false" layoutX="13.0" layoutY="64.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#clickTabelaProduto" prefHeight="510.0" prefWidth="348.0">
         <columns>
           <TableColumn fx:id="colIdProduto" prefWidth="28.0" text="ID" />
             <TableColumn fx:id="colPreco" prefWidth="52.0" text="Preço" />
@@ -24,7 +24,7 @@
       <TextField fx:id="entradaProdutoPreco" editable="false" layoutX="509.0" layoutY="507.0" prefHeight="25.0" prefWidth="120.0" promptText="Preço Total" />
       <TextField fx:id="entradaProdutoQuant" editable="false" layoutX="377.0" layoutY="507.0" prefHeight="25.0" prefWidth="120.0" promptText="Quant. Produtos" />
       <Text layoutX="14.0" layoutY="23.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Produtos" />
-      <TableView fx:id="tabelaClientes" accessibleRoleDescription="Produtos" accessibleText="Produtos" focusTraversable="false" layoutX="372.0" layoutY="28.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#clickTabelaProduto" prefHeight="464.0" prefWidth="268.0">
+      <TableView fx:id="tabelaClientes" accessibleRoleDescription="Produtos" accessibleText="Produtos" focusTraversable="false" layoutX="372.0" layoutY="65.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#clickTabelaProduto" prefHeight="435.0" prefWidth="268.0">
          <columns>
             <TableColumn fx:id="colIdCliente" prefWidth="28.0" text="ID" />
             <TableColumn fx:id="colNomeCliente" prefWidth="131.0" text="Nome" />
@@ -32,5 +32,7 @@
          </columns>
       </TableView>
       <Text layoutX="372.0" layoutY="23.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Clientes" />
+      <TextField fx:id="produtoPesquisaEntrada" layoutX="14.0" layoutY="29.0" onKeyPressed="#produtoPesquisaEntradaMudou" prefHeight="25.0" prefWidth="348.0" promptText="Pesquisar Produto" />
+      <TextField fx:id="clientePesquisaEntrada" layoutX="372.0" layoutY="29.0" onKeyPressed="#clientePesquisaEntradaMudou" prefHeight="25.0" prefWidth="268.0" promptText="Pesquisar Cliente" />
    </children>
 </fx:root>

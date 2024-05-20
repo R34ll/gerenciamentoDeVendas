@@ -1,4 +1,4 @@
-package Controles;
+package controles;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -26,7 +26,7 @@ import modelos.Venda;
 
 public class VendaControle extends AnchorPane {
 
-    private String VENDA_CENA = "cenas/VendaCena.fxml"; // Caminho para o arquivo FXML da cena de venda
+    private String VENDA_CENA = "/cenas/VendaCena.fxml"; // Caminho para o arquivo FXML da cena de venda
     private String VENDAS_CSV = "src\\dados\\vendas.csv"; // Caminho para o arquivo CSV das vendas
     @FXML
     private TableColumn<Venda, String> ColData; // Coluna para exibir a data da venda

@@ -1,6 +1,5 @@
 import java.io.IOException;
 
-import Controles.PrincipalControle;
 import Uteis.Erro;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -47,8 +46,8 @@ public class App extends Application {
         Parent pane = loader.load();
 
         // Se o controlador for uma instância de PrincipalControle, define o funcionário
-        if (loader.getController() instanceof PrincipalControle) {
-            PrincipalControle controle = loader.getController();
+        if (loader.getController() instanceof PrincipalPainel) {
+            PrincipalPainel controle = loader.getController();
             controle.setFuncionario(funcionario);
         }
 

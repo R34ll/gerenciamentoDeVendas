@@ -1,4 +1,4 @@
-package Controles;
+package controles;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -25,7 +25,7 @@ import modelos.Funcionario;
 
 public class ClienteControle extends AnchorPane {
 
-    private static final String CLIENTE_CENA = "cenas/ClienteCena.fxml"; // Caminho para o arquivo FXML da cena do cliente
+    private static final String CLIENTE_CENA = "/cenas/ClienteCena.fxml"; // Caminho para o arquivo FXML da cena do cliente
     private static final String CLIENTES_CSV = "src\\dados\\clientes.csv"; // Caminho para o arquivo CSV dos clientes
 
     @FXML

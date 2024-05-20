@@ -1,11 +1,11 @@
 package modelos;
 
 public class Funcionario {
-    int id;
-    String usuario;
-    String nome;
-    String cadastro;
-    String senha;
+    private int id;
+    private String usuario;
+    private String nome;
+    private String cadastro;
+    private String senha;
 
     public Funcionario(int id,String usuario, String nome, String cadastro, String senha){
         this.id = id;

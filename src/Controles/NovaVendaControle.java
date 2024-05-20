@@ -1,8 +1,9 @@
-package Controles;
+package controles;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 import Uteis.Erro;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -15,6 +16,8 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import modelos.Cliente;
@@ -23,6 +26,8 @@ import modelos.Produto;
 import modelos.Venda;
 
 public class NovaVendaControle extends AnchorPane {
+
+    private static final String NOVAVENDA_CENA = "/cenas/NovaVendaCena.fxml"; // Caminho para o arquivo FXML da cena  NovaVenda
 
     @FXML
     private Button btnVendasAdicionar; // Botão para adicionar uma nova venda
@@ -57,10 +62,16 @@ public class NovaVendaControle extends AnchorPane {
     @FXML
     private TableView<Cliente> tabelaClientes; // Tabela para exibir os clientes
 
+    @FXML
+    private TextField produtoPesquisaEntrada;
+
+    @FXML
+    private TextField clientePesquisaEntrada;
+
     private Funcionario funcionario; // Objeto para armazenar o funcionário logado
 
     public NovaVendaControle(Funcionario funcionarioArg) {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("cenas/NovaVendaCena.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(NOVAVENDA_CENA));
 
         fxmlLoader.setRoot(this);
         fxmlLoader.setController(this);
@@ -162,4 +173,15 @@ public class NovaVendaControle extends AnchorPane {
         }
     }
 
+
+
+    @FXML
+    void clientePesquisaEntradaMudou(KeyEvent event) {
+
+    }
+
+    @FXML
+    void produtoPesquisaEntradaMudou(KeyEvent event) {
+
+    }
 }
